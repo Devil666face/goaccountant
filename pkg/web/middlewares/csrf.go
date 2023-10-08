@@ -13,7 +13,7 @@ const (
 	Csrf = "csrf"
 )
 
-func CsrfMiddleware(s *session.SessionStore) func(c *fiber.Ctx) error {
+func CsrfMiddleware(s *session.Store) func(c *fiber.Ctx) error {
 	return csrf.New(csrf.Config{
 		Storage:        s.Storage,
 		KeyLookup:      "form:csrf",

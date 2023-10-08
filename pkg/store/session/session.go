@@ -14,7 +14,7 @@ const (
 	table = "storage"
 )
 
-type SessionStore struct {
+type Store struct {
 	Store         *session.Store
 	Storage       fiber.Storage
 	config        *config.Config
@@ -22,8 +22,8 @@ type SessionStore struct {
 	psqlConnect   string
 }
 
-func New(config *config.Config, db *database.Database) *SessionStore {
-	s := SessionStore{
+func New(config *config.Config, db *database.Database) *Store {
+	s := Store{
 		config:        config,
 		sqliteConnect: db.SqliteConnect,
 		psqlConnect:   db.PsqlConnect,
@@ -33,14 +33,14 @@ func New(config *config.Config, db *database.Database) *SessionStore {
 	return &s
 }
 
-func (s *SessionStore) setStorage() {
+func (s *Store) setStorage() {
 	if s.config.PostgresUse {
 		s.Storage = s.NewPsqlStorage()
 	}
 	s.Storage = s.NewSqliteStorage()
 }
 
-func (s *SessionStore) getStore() *session.Store {
+func (s *Store) getStore() *session.Store {
 	return session.New(session.Config{
 		// CookieSecure: true,
 		CookieHTTPOnly: true,

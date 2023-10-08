@@ -10,11 +10,11 @@ import (
 type Middlewares struct {
 	router      fiber.Router
 	config      *config.Config
-	session     *session.SessionStore
+	session     *session.Store
 	middlewares []func(*fiber.Ctx) error
 }
 
-func New(router fiber.Router, session *session.SessionStore, config *config.Config) *Middlewares {
+func New(router fiber.Router, session *session.Store, config *config.Config) *Middlewares {
 	m := Middlewares{
 		router:  router,
 		config:  config,

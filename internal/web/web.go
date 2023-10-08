@@ -22,7 +22,7 @@ type App struct {
 	database    *database.Database
 	middlewares *middlewares.Middlewares
 	router      *routes.AppRouter
-	session     *session.SessionStore
+	session     *session.Store
 }
 
 func New() *App {
