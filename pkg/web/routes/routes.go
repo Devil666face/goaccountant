@@ -2,6 +2,7 @@ package routes
 
 import (
 	"github.com/Devil666face/goaccountant/pkg/web/handlers"
+
 	"github.com/gofiber/fiber/v2"
 )
 

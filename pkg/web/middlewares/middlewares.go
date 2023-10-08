@@ -2,6 +2,7 @@ package middlewares
 
 import (
 	"github.com/Devil666face/goaccountant/pkg/config"
+
 	"github.com/gofiber/fiber/v2"
 )
 

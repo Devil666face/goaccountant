@@ -4,6 +4,7 @@ import (
 	"log"
 
 	"github.com/Devil666face/goaccountant/pkg/config"
+
 	"gorm.io/gorm"
 )
 

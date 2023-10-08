@@ -8,6 +8,7 @@ import (
 	"github.com/Devil666face/goaccountant/pkg/web/handlers"
 	"github.com/Devil666face/goaccountant/pkg/web/middlewares"
 	"github.com/Devil666face/goaccountant/pkg/web/routes"
+
 	"github.com/gofiber/fiber/v2"
 )
 

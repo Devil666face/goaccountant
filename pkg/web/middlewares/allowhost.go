@@ -4,6 +4,7 @@ import (
 	"strings"
 
 	"github.com/Devil666face/goaccountant/pkg/config"
+
 	"github.com/gofiber/fiber/v2"
 )
 
