@@ -5,6 +5,7 @@ import (
 
 	"github.com/Devil666face/goaccountant/pkg/config"
 	"github.com/Devil666face/goaccountant/pkg/store/database"
+	"github.com/Devil666face/goaccountant/pkg/store/session"
 	"github.com/Devil666face/goaccountant/pkg/web/handlers"
 	"github.com/Devil666face/goaccountant/pkg/web/middlewares"
 	"github.com/Devil666face/goaccountant/pkg/web/routes"
@@ -21,16 +22,22 @@ type App struct {
 	database    *database.Database
 	middlewares *middlewares.Middlewares
 	router      *routes.AppRouter
+	session     *session.SessionStore
 }
 
 func New() *App {
 	a := Init()
+
 	a.database = database.New(a.config, []interface{}{})
+	a.session = session.New(a.config, a.database)
+
 	a.app.Use(a.logger)
 	a.app.Use(routes.StaticPrefix, a.static)
 	a.app.Static(routes.MediaPrefix, a.media.path, a.media.handler)
-	a.middlewares = middlewares.New(a.app, a.config)
+
+	a.middlewares = middlewares.New(a.app, a.session, a.config)
 	a.router = routes.New(a.app)
+
 	return a
 }
 

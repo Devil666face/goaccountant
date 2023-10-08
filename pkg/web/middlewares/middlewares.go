@@ -2,20 +2,23 @@ package middlewares
 
 import (
 	"github.com/Devil666face/goaccountant/pkg/config"
+	"github.com/Devil666face/goaccountant/pkg/store/session"
 
 	"github.com/gofiber/fiber/v2"
 )
 
 type Middlewares struct {
 	router      fiber.Router
-	middlewares []func(*fiber.Ctx) error
 	config      *config.Config
+	session     *session.SessionStore
+	middlewares []func(*fiber.Ctx) error
 }
 
-func New(router fiber.Router, config *config.Config) *Middlewares {
+func New(router fiber.Router, session *session.SessionStore, config *config.Config) *Middlewares {
 	m := Middlewares{
-		router: router,
-		config: config,
+		router:  router,
+		config:  config,
+		session: session,
 	}
 	m.middlewares = m.getMiddlewares()
 	m.setMiddlewares()
@@ -31,6 +34,7 @@ func (m *Middlewares) setMiddlewares() {
 func (m *Middlewares) getMiddlewares() []func(*fiber.Ctx) error {
 	return []func(*fiber.Ctx) error{
 		AllowedHostMiddleware(m.config),
+		CsrfMiddleware(m.session),
 	}
 
 }

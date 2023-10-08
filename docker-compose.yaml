@@ -1,0 +1,16 @@
+version: "3"
+
+services:
+  postgres:
+    container_name: postgres
+    image: postgres:bullseye
+    environment:
+      POSTGRES_DB: "db"
+      POSTGRES_USER: "superuser"
+      POSTGRES_PASSWORD: "Qwerty123!"
+      PGDATA: /data/postgres
+    volumes:
+       - ./postgres:/data/postgres
+    ports:
+      - "127.0.0.1:5432:5432"
+    # restart: always

@@ -11,9 +11,11 @@ import (
 // var DB *gorm.DB
 
 type Database struct {
-	db     *gorm.DB
-	config *config.Config
-	tables []interface{}
+	db            *gorm.DB
+	config        *config.Config
+	tables        []interface{}
+	SqliteConnect string
+	PsqlConnect   string
 }
 
 func New(config *config.Config, tables []interface{}) *Database {
@@ -35,5 +37,5 @@ func (d *Database) connect() error {
 	if d.config.PostgresUse {
 		return d.NewPsql()
 	}
-	return d.NewSqlite3()
+	return d.NewSqlite()
 }

@@ -22,9 +22,9 @@
   <script type="text/javascript" src="/static/js/htmx.min.js" defer></script>
   <script type="text/javascript">
     document.body.addEventListener('htmx:configRequest', (event) => {
-      event.detail.headers['X-CSRFToken'] = '{{ .csrf }}';
+      event.detail.headers['X-CSRFToken'] = '{{ .c.Csrf }}';
       if (event.detail['verb'] !== 'get') {
-        event.detail.unfilteredParameters['csrf'] = '{{ .csrf }}';
+        event.detail.unfilteredParameters['csrf'] = '{{ .c.Csrf }}';
       }
     })
   </script>

@@ -10,15 +10,9 @@ import (
 )
 
 func (d *Database) NewPsql() (err error) {
+	d.PsqlConnect = d.getDNS()
 	if d.db, err = gorm.Open(postgres.New(postgres.Config{
-		DSN: fmt.Sprintf(
-			"host=%s user=%s password=%s dbname=%s port=%s sslmode=disable TimeZone=Europe/Moscow statement_timeout=0",
-			d.config.PostgresHost,
-			d.config.PostgresUser,
-			d.config.PostgresPassword,
-			d.config.PostgresDb,
-			d.config.PostgresPort,
-		),
+		DSN: d.PsqlConnect,
 	}), &gorm.Config{
 		NowFunc: func() time.Time { return time.Now().Local() },
 		Logger:  logger.Default.LogMode(logger.Info),
@@ -26,4 +20,16 @@ func (d *Database) NewPsql() (err error) {
 		return err
 	}
 	return nil
+}
+
+func (d *Database) getDNS() string {
+	return fmt.Sprintf(
+		"host=%s user=%s password=%s dbname=%s port=%s sslmode=disable TimeZone=Europe/Moscow statement_timeout=0",
+		d.config.PostgresHost,
+		d.config.PostgresUser,
+		d.config.PostgresPassword,
+		d.config.PostgresDb,
+		d.config.PostgresPort,
+	)
+
 }
