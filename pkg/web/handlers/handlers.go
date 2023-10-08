@@ -16,3 +16,7 @@ func (c ViewCtx) Csrf() string {
 func Index(c *fiber.Ctx) error {
 	return c.Render("index", fiber.Map{"c": ViewCtx{c}})
 }
+
+func Login(c *fiber.Ctx) error {
+	return c.Render("login", fiber.Map{"c": ViewCtx{c}})
+}

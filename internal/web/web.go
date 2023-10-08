@@ -23,26 +23,11 @@ type App struct {
 	middlewares *middlewares.Middlewares
 	router      *routes.AppRouter
 	session     *session.Store
+	tables      []interface{}
 }
 
 func New() *App {
-	a := Init()
-
-	a.database = database.New(a.config, []interface{}{})
-	a.session = session.New(a.config, a.database)
-
-	a.app.Use(a.logger)
-	a.app.Use(routes.StaticPrefix, a.static)
-	a.app.Static(routes.MediaPrefix, a.media.path, a.media.handler)
-
-	a.middlewares = middlewares.New(a.app, a.session, a.config)
-	a.router = routes.New(a.app)
-
-	return a
-}
-
-func Init() *App {
-	return &App{
+	a := &App{
 		app: fiber.New(
 			fiber.Config{
 				AppName:      "goaccountant",
@@ -55,7 +40,28 @@ func Init() *App {
 		static: NewStatic(),
 		media:  NewMedia(),
 		config: config.New(),
+		tables: []interface{}{},
 	}
+	a.setStores()
+	a.setStatics()
+	a.setRoutes()
+	return a
+}
+
+func (a *App) setStores() {
+	a.database = database.New(a.config, a.tables)
+	a.session = session.New(a.config, a.database)
+}
+
+func (a *App) setStatics() {
+	a.app.Use(routes.StaticPrefix, a.static)
+	a.app.Static(routes.MediaPrefix, a.media.path, a.media.handler)
+}
+
+func (a *App) setRoutes() {
+	a.app.Use(a.logger)
+	a.middlewares = middlewares.New(a.app, a.session, a.config)
+	a.router = routes.New(a.app, a.session)
 }
 
 func (a *App) Listen() error {
