@@ -3,10 +3,9 @@ package web
 import (
 	"log"
 	"net/http"
-	"os"
-	"path/filepath"
 
 	"github.com/Devil666face/goaccountant/assets"
+	"github.com/Devil666face/goaccountant/pkg/utils"
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/filesystem"
@@ -37,7 +36,7 @@ func NewViews() *html.Engine {
 }
 
 func NewMedia() *Media {
-	path, err := setPath(assets.DirMedia)
+	path, err := utils.SetPath(assets.DirMedia)
 	if err != nil {
 		path = assets.DirMedia
 		log.Fatalln(err)
@@ -50,18 +49,4 @@ func NewMedia() *Media {
 			Browse:    isBrowse,
 		},
 	}
-}
-func setPath(dir string) (string, error) {
-	baseDir, err := os.Getwd()
-	if err != nil {
-		return dir, err
-	}
-	pathToDir, err := filepath.Abs(filepath.Join(baseDir, dir))
-	if err != nil {
-		return dir, err
-	}
-	if _, err := os.Stat(pathToDir); os.IsNotExist(err) {
-		os.MkdirAll(pathToDir, os.ModePerm)
-	}
-	return pathToDir, nil
 }

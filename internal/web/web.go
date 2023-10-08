@@ -1,75 +1,77 @@
 package web
 
 import (
+	"log"
+
 	"github.com/Devil666face/goaccountant/pkg/config"
+	"github.com/Devil666face/goaccountant/pkg/store/database"
+	"github.com/Devil666face/goaccountant/pkg/web/handlers"
+	"github.com/Devil666face/goaccountant/pkg/web/middlewares"
 	"github.com/Devil666face/goaccountant/pkg/web/routes"
 	"github.com/gofiber/fiber/v2"
 )
 
-type WebApp struct {
+type App struct {
 	app         *fiber.App
 	logger      func(*fiber.Ctx) error
 	static      func(*fiber.Ctx) error
 	media       *Media
-	middlewares []func(*fiber.Ctx) error
 	config      *config.Config
+	database    *database.Database
+	middlewares *middlewares.Middlewares
+	router      *routes.AppRouter
 }
 
-func New() *WebApp {
-	wa := Init()
-	wa.app.Use(wa.logger)
-	wa.app.Use(routes.StaticPrefix, wa.static)
-	wa.app.Static(routes.MediaPrefix, wa.media.path, wa.media.handler)
-	for _, m := range wa.middlewares {
-		wa.app.Use(m)
-	}
-	return wa
+func New() *App {
+	a := Init()
+	a.database = database.New(a.config, []interface{}{})
+	a.app.Use(a.logger)
+	a.app.Use(routes.StaticPrefix, a.static)
+	a.app.Static(routes.MediaPrefix, a.media.path, a.media.handler)
+	a.middlewares = middlewares.New(a.app, a.config)
+	a.router = routes.New(a.app)
+	return a
 }
 
-func Init() *WebApp {
-	return &WebApp{
+func Init() *App {
+	return &App{
 		app: fiber.New(
 			fiber.Config{
-				ErrorHandler: nil,
+				AppName:      "goaccountant",
+				ErrorHandler: handlers.DefaultErrorHandler,
 				Views:        NewViews(),
+				ViewsLayout:  "base",
 			},
 		),
-		logger:      NewLogger(),
-		static:      NewStatic(),
-		media:       NewMedia(),
-		middlewares: NewMiddlewares(),
-		config:      config.New(),
+		logger: NewLogger(),
+		static: NewStatic(),
+		media:  NewMedia(),
+		config: config.New(),
 	}
 }
 
-func (wa *WebApp) Listen() error {
-	if wa.config.UseTls {
-		return wa.listenTLS()
+func (a *App) Listen() error {
+	if a.config.UseTLS {
+		return a.listenTLS()
 	}
-	return wa.listenNoTLS()
+	return a.listenNoTLS()
 }
 
-func (wa *WebApp) listenTLS() error {
-	go wa.redirectServer()
-	if err := wa.app.ListenTLS(wa.config.ConnectHttps, wa.config.TlsCrt, wa.config.TlsKey); err != nil {
-		return err
-	}
-	return nil
+func (a *App) listenTLS() error {
+	go a.redirectServer()
+	return a.app.ListenTLS(a.config.ConnectHTTPS, a.config.TLSCrt, a.config.TLSKey)
 }
 
-func (wa *WebApp) listenNoTLS() error {
-	if err := wa.app.Listen(wa.config.ConnectHttp); err != nil {
-		return err
-	}
-	return nil
+func (a *App) listenNoTLS() error {
+	return a.app.Listen(a.config.ConnectHTTP)
 }
 
-func (wa *WebApp) redirectServer() {
+func (a *App) redirectServer() {
 	app := fiber.New(fiber.Config{DisableStartupMessage: true})
 	app.Use(func(c *fiber.Ctx) error {
-		return c.Redirect(wa.config.HttpsRedirect)
+		return c.Redirect(a.config.HTTPSRedirect)
 	})
-	if err := app.Listen(wa.config.ConnectHttp); err != nil {
-		panic(err)
+	if err := app.Listen(a.config.ConnectHTTP); err != nil {
+		log.Fatalln(err)
 	}
 }
