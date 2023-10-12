@@ -33,6 +33,10 @@ air: .install-air ## Run dev server
 lint: .install-linter ## Run linter
 	$(PROJECT_BIN)/golangci-lint run ./... --deadline=30m --enable=misspell --enable=gosec --enable=gofmt --enable=goimports --enable=revive 
 
+.PHONY: cert
+cert: ## Make ssl cert's
+	openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout server.key -out server.crt
+
 .PHONY: help
 help:
 	@cat $(MAKEFILE_LIST) | grep -E '^[a-zA-Z_-]+:.*?## .*$$' | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}'
