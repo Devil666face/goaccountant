@@ -1,5 +1,6 @@
 /tmp
 /bin
+/media
 /.env
 /db.sqlite3
 /postgres
