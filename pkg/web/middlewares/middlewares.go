@@ -35,6 +35,7 @@ func (m *Middlewares) getMiddlewares() []func(*fiber.Ctx) error {
 	return []func(*fiber.Ctx) error{
 		AllowedHostMiddleware(m.config),
 		CsrfMiddleware(m.session),
+		HtmxMiddleware,
 	}
 
 }

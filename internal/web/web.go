@@ -33,7 +33,7 @@ func New() *App {
 				AppName:      "goaccountant",
 				ErrorHandler: handlers.DefaultErrorHandler,
 				Views:        NewViews(),
-				ViewsLayout:  "base",
+				// ViewsLayout:  "base",
 			},
 		),
 		logger: NewLogger(),
