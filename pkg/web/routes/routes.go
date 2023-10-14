@@ -1,9 +1,11 @@
 package routes
 
 import (
+	"github.com/Devil666face/goaccountant/pkg/config"
+	"github.com/Devil666face/goaccountant/pkg/store/database"
 	"github.com/Devil666face/goaccountant/pkg/store/session"
 	"github.com/Devil666face/goaccountant/pkg/web/handlers"
-	// "github.com/Devil666face/goaccountant/pkg/web/middlewares"
+	"github.com/Devil666face/goaccountant/pkg/web/middlewares"
 
 	"github.com/gofiber/fiber/v2"
 )
@@ -14,25 +16,46 @@ var (
 )
 
 type AppRouter struct {
-	router  fiber.Router
-	session *session.Store
+	router      fiber.Router
+	config      *config.Config
+	database    *database.Database
+	session     *session.Store
+	middlewares []func(*fiber.Ctx, *config.Config, *database.Database, *session.Store) error
 }
 
-func New(router fiber.Router, session *session.Store) *AppRouter {
+func New(router fiber.Router, cfg *config.Config, db *database.Database, s *session.Store) *AppRouter {
 	r := AppRouter{
-		router:  router,
-		session: session,
+		router:   router,
+		config:   cfg,
+		database: db,
+		session:  s,
+		middlewares: []func(*fiber.Ctx, *config.Config, *database.Database, *session.Store) error{
+			middlewares.AllowedHostMiddleware,
+			middlewares.CsrfMiddleware,
+			middlewares.HtmxMiddleware,
+		},
 	}
+	r.SetMiddlewares()
 	r.SetAuth()
 	r.SetUser()
-	// r.SetFree()
-	// r.WithAuth()
 	return &r
+}
+
+func (r *AppRouter) Handler(f func(*fiber.Ctx, *config.Config, *database.Database, *session.Store) error) func(c *fiber.Ctx) error {
+	return func(c *fiber.Ctx) error {
+		return f(c, r.config, r.database, r.session)
+	}
+}
+
+func (r *AppRouter) SetMiddlewares() {
+	for _, middleware := range r.middlewares {
+		r.router.Use(r.Handler(middleware))
+	}
 }
 
 func (r *AppRouter) SetAuth() {
 	auth := r.router.Group("/auth")
-	auth.Get("/login", handlers.Login).Name("login")
+	auth.Get("/login", r.Handler(handlers.Login)).Name("login")
 }
 
 func (r *AppRouter) SetUser() {
@@ -41,12 +64,3 @@ func (r *AppRouter) SetUser() {
 	user.Get("/create", handlers.UserCreateForm).Name("user_create")
 	user.Post("/create", handlers.UserCreate)
 }
-
-// func (r *AppRouter) SetFree() {
-// 	r.router.Get("/login", handlers.Login).Name("login")
-// }
-
-// func (r *AppRouter) WithAuth() {
-// 	r.router.Use(middlewares.AuthMiddleware(r.session))
-// 	r.router.Get("/", handlers.Index)
-// }

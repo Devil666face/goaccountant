@@ -1,6 +1,6 @@
 {{define "login"}}
 <main class="form-signin w-100 m-auto">
-  <form method="POST" enctype="multipart/form-data" action="/auth/login">
+  <form method="POST" enctype="multipart/form-data" action='{{ .c.URL "login" }}'>
     {{ .c.Csrf }}
     <h1 class=" h3 mb-3 fw-normal">Sing in 🚪</h1>
     {{ if .Message }}

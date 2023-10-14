@@ -7,23 +7,23 @@ import (
 	"github.com/Devil666face/goaccountant/pkg/store/database"
 	"github.com/Devil666face/goaccountant/pkg/store/session"
 	"github.com/Devil666face/goaccountant/pkg/web/handlers"
-	"github.com/Devil666face/goaccountant/pkg/web/middlewares"
+	// "github.com/Devil666face/goaccountant/pkg/web/middlewares"
 	"github.com/Devil666face/goaccountant/pkg/web/routes"
 
 	"github.com/gofiber/fiber/v2"
 )
 
 type App struct {
-	app         *fiber.App
-	logger      func(*fiber.Ctx) error
-	static      func(*fiber.Ctx) error
-	media       *Media
-	config      *config.Config
-	database    *database.Database
-	middlewares *middlewares.Middlewares
-	router      *routes.AppRouter
-	session     *session.Store
-	tables      []interface{}
+	app      *fiber.App
+	logger   func(*fiber.Ctx) error
+	static   func(*fiber.Ctx) error
+	media    *Media
+	config   *config.Config
+	database *database.Database
+	// middlewares *middlewares.Middlewares
+	router  *routes.AppRouter
+	session *session.Store
+	tables  []interface{}
 }
 
 func New() *App {
@@ -60,8 +60,8 @@ func (a *App) setStatics() {
 
 func (a *App) setRoutes() {
 	a.app.Use(a.logger)
-	a.middlewares = middlewares.New(a.app, a.session, a.config)
-	a.router = routes.New(a.app, a.session)
+	// a.middlewares = middlewares.New(a.app, a.config, a.session)
+	a.router = routes.New(a.app, a.config, a.database, a.session)
 }
 
 func (a *App) Listen() error {
