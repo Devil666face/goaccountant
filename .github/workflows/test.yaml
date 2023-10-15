@@ -1,0 +1,19 @@
+name: Test
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  lint:
+    name: Test variables
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+    name: Echo
+    run: echo "${{ env.RELEASE_TAG }} ${{ vars.RELEASE_TAG }}"
