@@ -10,7 +10,8 @@ import (
 	"gorm.io/gorm/logger"
 )
 
-func (d *Database) NewSqlite() (err error) {
+func (d *Database) NewSqlite() error {
+	var err error
 	d.SqliteConnect, err = utils.SetPath(d.config.SqliteDB)
 	if err != nil {
 		return err

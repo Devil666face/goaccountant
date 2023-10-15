@@ -2,15 +2,21 @@ package handlers
 
 import (
 	"github.com/Devil666face/goaccountant/pkg/web/models"
+	"github.com/Devil666face/goaccountant/pkg/web/view"
 	"github.com/gofiber/fiber/v2"
 )
 
 func UserList(c *fiber.Ctx) error {
-	return ViewCtx{c}.RenderWithCtx("user_list", fiber.Map{}, "base")
+	if vc := view.New(c); vc.IsHtmx() {
+		return vc.RenderWithCtx("user_content", fiber.Map{})
+	}
+	return view.New(c).RenderWithCtx("user_list", fiber.Map{
+		"Title": "List of users",
+	}, "base")
 }
 
 func UserCreateForm(c *fiber.Ctx) error {
-	return ViewCtx{c}.RenderWithCtx("user_create", fiber.Map{})
+	return view.New(c).RenderWithCtx("user_create", fiber.Map{})
 }
 
 func UserCreate(c *fiber.Ctx) error {
@@ -19,7 +25,7 @@ func UserCreate(c *fiber.Ctx) error {
 		return fiber.ErrBadRequest
 	}
 	if err := u.Validate(); err != nil {
-		return ViewCtx{c}.RenderWithCtx("user_create", fiber.Map{
+		return view.New(c).RenderWithCtx("user_create", fiber.Map{
 			"Message": err.Error(),
 		})
 	}

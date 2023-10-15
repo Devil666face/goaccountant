@@ -1,4 +1,4 @@
-{{define "login"}}
+{{ define "login" }}
 <main class="form-signin w-100 m-auto">
   <form method="POST" enctype="multipart/form-data" action='{{ .c.URL "login" }}'>
     {{ .c.Csrf }}
@@ -19,4 +19,4 @@
     <button class="btn btn-outline-primary w-100 py-2" type="submit">Login 🔑</button>
   </form>
 </main>
-{{end}}
+{{ end }}

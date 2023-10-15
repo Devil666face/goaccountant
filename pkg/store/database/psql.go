@@ -9,7 +9,8 @@ import (
 	"gorm.io/gorm/logger"
 )
 
-func (d *Database) NewPsql() (err error) {
+func (d *Database) NewPsql() error {
+	var err error
 	d.PsqlConnect = d.getDNS()
 	if d.db, err = gorm.Open(postgres.New(postgres.Config{
 		DSN: d.PsqlConnect,

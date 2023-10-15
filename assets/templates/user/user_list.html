@@ -1,38 +1,8 @@
-{{define "user_list"}}
-
-{{block "user_content" . }}
-{{range .Users}}
-<div id="users">
-  <div class="row mb-2" id="user_{{.ID}}">
-    <div class=" col">
-      {{.ID}}
-    </div>
-    <div class="col">
-      {{.Username}}
-    </div>
-    <div class="col">
-      {{if .Admin}}✅{{else}}❌{{end}}
-    </div>
-    <div class="col">
-      <button type="button" class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#edit_user"
-        hx-get='{{ .c.URLto "user-edit" "id" .ID }}' hx-swap="innerHTML" hx-target="#edit_user_content">
-        Edit 📝
-      </button>
-    </div>
-    <div class="col">
-      <button type="button" class="btn btn-outline-danger" hx-confirm="🗑 Delete user - {{.Username}}?"
-        hx-swap="innerHTML" hx-delete='{{ .c.URLto "user-delete" "id" .ID }}' hx-target="#users">
-        Delete 🗑
-      </button>
-    </div>
-  </div>
-</div>
-{{end}}
-{{end}}
-
-{{if .c.IsHtmx }}
-{{template "user_content" . }}
-{{else}}
+{{ define "user_list" }}
+{{ if .c.IsHtmx }}
+<h1>From HTMX</h1>
+{{ template "user_content" . }}
+{{ else }}
 <div class="container pt-5">
   <div class="row">
     <div class="col">
@@ -42,11 +12,40 @@
         Create user 🙍‍♂️
       </button>
     </div>
-    {{template "user_content" . }}
+    {{ template "user_content" . }}
   </div>
 </div>
-{{with $id:="create_user"}}{{template "modal_dialog" $id }}{{end}}
-{{with $id:="edit_user"}}{{template "modal_dialog" $id }}{{end}}
-{{end}}
+{{ with $id:="create_user" }}{{ template "modal_dialog" $id }}{{ end }}
+{{ with $id:="edit_user" }}{{ template "modal_dialog" $id }}{{ end }}
+{{ end }}
+{{ end }}
 
-{{end}}
+{{ block "user_content" . }}
+<div id="users">
+  {{ range .Users }}
+  <div class="row mb-2" id="user_{{.ID}}">
+    <div class=" col">
+      {{ .ID }}
+    </div>
+    <div class="col">
+      {{ .Username }}
+    </div>
+    <div class="col">
+      {{ if .Admin }}✅{{ else }}❌{{ end }}
+    </div>
+    <div class="col">
+      <button type="button" class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#edit_user"
+        hx-get='{{ .c.URLto "user-edit" "id" .ID }}' hx-swap="innerHTML" hx-target="#edit_user_content">
+        Edit 📝
+      </button>
+    </div>
+    <div class="col">
+      <button type="button" class="btn btn-outline-danger" hx-confirm="🗑 Delete user - {{ .Username }}?"
+        hx-swap="innerHTML" hx-delete='{{ .c.URLto "user-delete" "id" .ID }}' hx-target="#users">
+        Delete 🗑
+      </button>
+    </div>
+  </div>
+  {{ end }}
+</div>
+{{ end }}
