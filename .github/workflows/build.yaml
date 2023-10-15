@@ -42,8 +42,9 @@ jobs:
         uses: actions/create-release@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          RELEASE_TAG: ${{ vars.RELEASE_TAG }}
         with:
-          tag_name: ${{ env.RELEASE_TAG }}
+          tag_name: $RELEASE_TAG
           draft: true
           prerelease: false
 
