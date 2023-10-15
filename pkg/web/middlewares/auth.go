@@ -14,20 +14,20 @@ const (
 )
 
 func AuthMiddleware(c *fiber.Ctx, _ *config.Config, _ *database.Database, s *session.Store) error {
-	session, err := s.Store.Get(c)
+	sess, err := s.Store.Get(c)
 	if err != nil {
 		return c.Status(fiber.StatusUnauthorized).
 			RedirectToRoute("login", nil)
 	}
-	if session.Get(AuthKey) == nil {
+	if sess.Get(AuthKey) == nil {
 		return c.Status(fiber.StatusUnauthorized).
 			RedirectToRoute("login", nil)
 	}
-	uID := session.Get(UserID)
+	uID := sess.Get(UserID)
 	if uID == nil {
 		return c.Status(fiber.StatusUnauthorized).
 			RedirectToRoute("login", nil)
 	}
-	//Get user
+	// Get user
 	return c.Next()
 }

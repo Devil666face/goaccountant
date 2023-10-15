@@ -28,8 +28,7 @@ func (d *Database) getDNS() string {
 		d.config.PostgresHost,
 		d.config.PostgresUser,
 		d.config.PostgresPassword,
-		d.config.PostgresDb,
+		d.config.PostgresDB,
 		d.config.PostgresPort,
 	)
-
 }

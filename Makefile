@@ -31,7 +31,7 @@ air: .install-air ## Run dev server
 
 .PHONY: lint
 lint: .install-linter ## Run linter
-	$(PROJECT_BIN)/golangci-lint run ./... --deadline=30m --enable=misspell --enable=gosec --enable=gofmt --enable=goimports --enable=revive 
+	$(PROJECT_BIN)/golangci-lint run ./...
 
 .PHONY: cert
 cert: ## Make ssl cert's

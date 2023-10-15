@@ -33,7 +33,7 @@ func (c ViewCtx) URL(name string) string {
 	return c.getRouteURL(name, fiber.Map{})
 }
 
-func (c ViewCtx) URLto(name, key string, val interface{}) string {
+func (c ViewCtx) URLto(name, key string, val any) string {
 	return c.getRouteURL(name, fiber.Map{
 		key: val,
 	})
@@ -42,7 +42,7 @@ func (c ViewCtx) URLto(name, key string, val interface{}) string {
 func (c ViewCtx) getRouteURL(name string, fmap fiber.Map) string {
 	url, err := c.GetRouteURL(name, fmap)
 	if err != nil {
-		log.Fatalf("Url - %s not found", name)
+		log.Printf("Url - %s not found", name)
 	}
 	return url
 }

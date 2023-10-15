@@ -23,7 +23,7 @@ type App struct {
 	// middlewares *middlewares.Middlewares
 	router  *routes.AppRouter
 	session *session.Store
-	tables  []interface{}
+	tables  []any
 }
 
 func New() *App {
@@ -40,7 +40,7 @@ func New() *App {
 		static: NewStatic(),
 		media:  NewMedia(),
 		config: config.New(),
-		tables: []interface{}{},
+		tables: []any{},
 	}
 	a.setStores()
 	a.setStatics()

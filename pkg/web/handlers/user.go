@@ -1,8 +1,6 @@
 package handlers
 
 import (
-	"fmt"
-
 	"github.com/Devil666face/goaccountant/pkg/web/models"
 	"github.com/gofiber/fiber/v2"
 )
@@ -24,6 +22,5 @@ func UserCreate(c *fiber.Ctx) error {
 	if err := c.BodyParser(&u); err != nil {
 		return err
 	}
-	fmt.Println(u)
 	return nil
 }

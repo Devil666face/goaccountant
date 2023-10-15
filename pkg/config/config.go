@@ -23,7 +23,7 @@ type Config struct {
 	PostgresUse      bool   `env:"POSTGRES" env-default:"false"`
 	PostgresHost     string `env:"POSTGRES_HOST" env-default:"localhost"`
 	PostgresPort     string `env:"POSTGRES_PORT" env-default:"5432"`
-	PostgresDb       string `env:"POSTGRES_DB" env-default:"db"`
+	PostgresDB       string `env:"POSTGRES_DB" env-default:"db"`
 	PostgresUser     string `env:"POSTGRES_USER" env-default:"superuser"`
 	PostgresPassword string `env:"POSTGRES_PASSWORD" env-default:"Qwerty123!"`
 	ConnectHTTP      string

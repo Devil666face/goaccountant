@@ -13,14 +13,14 @@ import (
 type Database struct {
 	db            *gorm.DB
 	config        *config.Config
-	tables        []interface{}
+	tables        []any
 	SqliteConnect string
 	PsqlConnect   string
 }
 
-func New(config *config.Config, tables []interface{}) *Database {
+func New(cfg *config.Config, tables []any) *Database {
 	d := Database{
-		config: config,
+		config: cfg,
 		tables: tables,
 	}
 	if err := d.connect(); err != nil {
