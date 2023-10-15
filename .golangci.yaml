@@ -9,9 +9,9 @@ output:
 
 linters-settings:
   errcheck:
-     check-type-assertions: true
-     check-blank: true
-     disable-default-exclusions: true
+    check-type-assertions: true
+    check-blank: true
+    disable-default-exclusions: true
 
   errchkjson:
     report-no-exported: true
@@ -24,7 +24,7 @@ linters-settings:
       - ^(fmt\.Print(|f|ln)|print|println)$
       - 'http\.Default(Client|Transport)'
       - 'time\.Sleep'
-      - 'panic'
+      - "panic"
 
   gocritic:
     disabled-checks:
@@ -128,7 +128,7 @@ linters-settings:
   #     - github.com/gofiber/fiber/*
 
 issues:
-   exclude-use-default: false
+  exclude-use-default: false
 
 linters:
   enable:

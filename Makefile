@@ -44,7 +44,7 @@ cert: ## Make ssl cert's
 	npm -g list | grep -e "prettier" -e "prettier-plugin-go-template" || npm -g install prettier prettier-plugin-go-template
 
 .PHONY: fmt
-fmt: .install-formatter ## Format html go templates
+fmt: .install-formatter ## [DEPRECATED] Format html go templates
 	prettier --plugin $(PATH_TO_PRETTIER_PLUGIN) --parser go-template -w $(PATH_TO_TEMPLATES)
 
 .PHONY: help
