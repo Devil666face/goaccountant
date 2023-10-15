@@ -21,7 +21,7 @@ func UserCreateForm(c *fiber.Ctx) error {
 
 func UserCreate(c *fiber.Ctx) error {
 	u := models.User{}
-	if err := c.BodyParser(u); err != nil {
+	if err := c.BodyParser(&u); err != nil {
 		return err
 	}
 	fmt.Println(u)

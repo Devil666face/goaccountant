@@ -6,9 +6,9 @@ cmd = "CGO_ENABLED=1 GOOS=linux GOARCH=amd64 go build -o tmp/main cmd/main/main.
 bin = "tmp/main"
 full_bin = "tmp/main"
 # Watch these filename extensions.
-include_ext = ["go"]
+include_ext = ["go", "html", "css", "js"]
 # Ignore these filename extensions or directories.
-exclude_dir = ["tmp", "vendor", "postgres"]
+exclude_dir = ["tmp", "vendor", "static", "media"]
 # Watch these directories if you specified.
 include_dir = []
 # Exclude files.

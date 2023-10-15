@@ -20,7 +20,7 @@
 		class="form-control" {{if not .User}}required{{end}}>
 	<br>
 	<label>Admin 👨‍🔧:</label>
-	<input name="admin" type="checkbox" value="admin" autocomplete="off" {{if .User.Admin}}checked{{end}}
+	<input name="admin" type="checkbox" value="true" autocomplete="off" {{if .User.Admin}}checked{{end}}
 		class="form-check-label">
 	<br>
 </div>
