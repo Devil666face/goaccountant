@@ -19,10 +19,9 @@ type App struct {
 	media    *Media
 	config   *config.Config
 	database *database.Database
-	// middlewares *middlewares.Middlewares
-	router  *routes.AppRouter
-	session *session.Store
-	tables  []any
+	router   *routes.AppRouter
+	session  *session.Store
+	tables   []any
 }
 
 func New() *App {
@@ -59,7 +58,6 @@ func (a *App) setStatics() {
 
 func (a *App) setRoutes() {
 	a.app.Use(a.logger)
-	// a.middlewares = middlewares.New(a.app, a.config, a.session)
 	a.router = routes.New(a.app, a.config, a.database, a.session)
 }
 

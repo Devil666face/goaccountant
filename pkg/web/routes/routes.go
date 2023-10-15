@@ -35,9 +35,9 @@ func New(router fiber.Router, cfg *config.Config, db *database.Database, s *sess
 			middlewares.HtmxMiddleware,
 		},
 	}
-	r.SetMiddlewares()
-	r.SetAuth()
-	r.SetUser()
+	r.setMiddlewares()
+	r.setAuth()
+	r.setUser()
 	return &r
 }
 
@@ -47,18 +47,18 @@ func (r *AppRouter) Handler(f func(*fiber.Ctx, *config.Config, *database.Databas
 	}
 }
 
-func (r *AppRouter) SetMiddlewares() {
+func (r *AppRouter) setMiddlewares() {
 	for _, middleware := range r.middlewares {
 		r.router.Use(r.Handler(middleware))
 	}
 }
 
-func (r *AppRouter) SetAuth() {
+func (r *AppRouter) setAuth() {
 	auth := r.router.Group("/auth")
 	auth.Get("/login", r.Handler(handlers.Login)).Name("login")
 }
 
-func (r *AppRouter) SetUser() {
+func (r *AppRouter) setUser() {
 	user := r.router.Group("/user")
 	user.Get("/list", handlers.UserList).Name("user_list")
 	user.Get("/create", handlers.UserCreateForm).Name("user_create")
