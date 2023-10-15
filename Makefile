@@ -7,8 +7,6 @@ GOARCH = amd64
 CGO_ENABLED = 1
 LDFLAGS = "-w -s"
 APP := $(notdir $(patsubst %/,%,$(dir $(abspath $(lastword $(MAKEFILE_LIST))))))
-PATH_TO_PRETTIER_PLUGIN = "/opt/helix/node/lib/node_modules/prettier-plugin-go-template/lib/index.js"
-PATH_TO_TEMPLATES = "assets/templates"
 
 .PHONY: build
 build: ## Build project
@@ -39,6 +37,8 @@ lint: .install-linter ## Run linter
 cert: ## Make ssl cert's
 	openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout server.key -out server.crt
 
+PATH_TO_PRETTIER_PLUGIN = "/opt/helix/node/lib/node_modules/prettier-plugin-go-template/lib/index.js"
+PATH_TO_TEMPLATES = "assets/templates"
 .PHONY: .install-formatter
 .install-formatter: ## Install prettier for formats html go templates. See https://github.com/NiklasPor/prettier-plugin-go-template
 	npm -g list | grep -e "prettier" -e "prettier-plugin-go-template" || npm -g install prettier prettier-plugin-go-template

@@ -5,6 +5,7 @@ import (
 	"github.com/Devil666face/goaccountant/pkg/store/database"
 	"github.com/Devil666face/goaccountant/pkg/store/session"
 	"github.com/Devil666face/goaccountant/pkg/web/view"
+
 	"github.com/gofiber/fiber/v2"
 )
 

@@ -3,6 +3,7 @@ package handlers
 import (
 	"github.com/Devil666face/goaccountant/pkg/web/models"
 	"github.com/Devil666face/goaccountant/pkg/web/view"
+
 	"github.com/gofiber/fiber/v2"
 )
 
