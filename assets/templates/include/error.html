@@ -1,10 +1,6 @@
 {{ define "error" }}
 <div class="container pt-5">
-  <h1>
-    {{ .Statuscode }}
-  </h1>
-  <p>
-    {{ .Error }}
-  </p>
+  <h1>{{ .Statuscode }}</h1>
+  <p>{{ .Error }}</p>
 </div>
 {{ end }}

@@ -1,10 +1,10 @@
 {{ define "user_create" }}
 <div class="modal-header">
-	<h1 class="modal-title fs-5" id="staticBackdropLabel">🙍‍♂️Create user</h1>
-	<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" hx-get='{{ .c.URL "user_list" }}'
-		hx-swap="innerHTML" hx-target="#users"></button>
+  <h1 class="modal-title fs-5" id="staticBackdropLabel">🙍‍♂️Create user</h1>
+  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" hx-get='{{ .c.URL "user_list" }}'
+    hx-swap="innerHTML" hx-target="#users"></button>
 </div>
 <form hx-post='{{ .c.URL "user_create" }}' hx-swap="innerHTML" hx-target="#create_user_content">
-	{{ template "user_form" . }}
+  {{ template "user_form" . }}
 </form>
 {{ end }}

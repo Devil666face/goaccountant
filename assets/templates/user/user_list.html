@@ -1,8 +1,4 @@
 {{ define "user_list" }}
-{{ if .c.IsHtmx }}
-<h1>From HTMX</h1>
-{{ template "user_content" . }}
-{{ else }}
 <div class="container pt-5">
   <div class="row">
     <div class="col">
@@ -18,21 +14,14 @@
 {{ with $id:="create_user" }}{{ template "modal_dialog" $id }}{{ end }}
 {{ with $id:="edit_user" }}{{ template "modal_dialog" $id }}{{ end }}
 {{ end }}
-{{ end }}
 
 {{ block "user_content" . }}
 <div id="users">
   {{ range .Users }}
-  <div class="row mb-2" id="user_{{.ID}}">
-    <div class=" col">
-      {{ .ID }}
-    </div>
-    <div class="col">
-      {{ .Username }}
-    </div>
-    <div class="col">
-      {{ if .Admin }}✅{{ else }}❌{{ end }}
-    </div>
+  <div class="row mb-2" id="user_{{ .ID }}">
+    <div class="col">{{ .ID }}</div>
+    <div class="col">{{ .Username }}</div>
+    <div class="col">{{ if .Admin }}✅{{ else }}❌{{ end }}</div>
     <div class="col">
       <button type="button" class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#edit_user"
         hx-get='{{ .c.URLto "user-edit" "id" .ID }}' hx-swap="innerHTML" hx-target="#edit_user_content">

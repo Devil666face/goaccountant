@@ -1,31 +1,83 @@
-{{ define "user_form" }}
-{{ .c.Csrf }}
+{{ define "user_form" }} {{ .c.Csrf }}
 <div class="modal-body">
-	{{ if .Message }}
-	<div class="alert alert-danger text-left" role="alert">❌ {{ .Message }}</div>
-	{{ end }}
-	{{ if .Success }}
-	<div class="alert alert-success text-left" role="alert">✅ {{ .Success }}</div>
-	{{ end }}
-	<label>Username ➡:</label>
-	<input name="username" required placeholder="Username" type="text" value="{{ .User.Username }}" autofocus
-		autocomplete="off" class="form-control">
-	<br>
-	<label>Password 🔒:</label>
-	<input name="password" placeholder="Empty for don't edit password" type="password" value="" class="form-control"
-		autocomplete="off" {{ if not .User }}required{{ end }}>
-	<br>
-	<label>Confirm password 🔏:</label>
-	<input name="password_confirm" placeholder="Empty for don't edit password" type="password" value="" autocomplete="off"
-		class="form-control" {{ if not .User}}required{{ end }}>
-	<br>
-	<label>Admin 👨‍🔧:</label>
-	<input name="admin" type="checkbox" value="true" autocomplete="off" {{ if .User.Admin }}checked{{ end }}
-		class="form-check-label">
-	<br>
+  {{ if .Message }}
+  <div class="alert alert-danger text-left" role="alert">❌ {{ .Message }}</div>
+  {{ end }} {{ if .Success }}
+  <div class="alert alert-success text-left" role="alert">
+    ✅ {{ .Success }}
+  </div>
+  {{ end }}
+  <label>Username ➡:</label>
+  <input
+    name="username"
+    required
+    placeholder="Username"
+    type="text"
+    value="{{ .User.Username }}"
+    autofocus
+    autocomplete="off"
+    class="form-control"
+  />
+  <br />
+  <label>Password 🔒:</label>
+  <input
+    name="password"
+    placeholder="Empty for don't edit password"
+    type="password"
+    value=""
+    class="form-control"
+    autocomplete="off"
+    {{
+    if
+    not
+    .User
+    }}required{{
+    end
+    }}
+  />
+  <br />
+  <label>Confirm password 🔏:</label>
+  <input
+    name="password_confirm"
+    placeholder="Empty for don't edit password"
+    type="password"
+    value=""
+    autocomplete="off"
+    class="form-control"
+    {{
+    if
+    not
+    .User
+    }}required{{
+    end
+    }}
+  />
+  <br />
+  <label>Admin 👨‍🔧:</label>
+  <input
+    name="admin"
+    type="checkbox"
+    value="true"
+    autocomplete="off"
+    {{
+    if
+    .User.Admin
+    }}checked{{
+    end
+    }}
+    class="form-check-label"
+  />
+  <br />
 </div>
 <div class="modal-footer">
-	<input type="submit" value="{{ if .User }}Edit 📝{{ else }}Create 🆕{{ end }}"
-		class="btn btn-outline-secondary form-control">
+  <input
+    type="submit"
+    value="{{ if .User }}
+        Edit 📝
+      {{ else }}
+        Create 🆕
+      {{ end }}"
+    class="btn btn-outline-secondary form-control"
+  />
 </div>
 {{ end }}
