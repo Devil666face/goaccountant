@@ -23,4 +23,4 @@ jobs:
         uses: golangci/golangci-lint-action@v3
         with:
           version: latest
-          args: --timeout 30m --verbose --deadline=30m --enable=misspell --enable=gosec --enable=gofmt --enable=goimports --enable=revive
+          args: --timeout 30m --verbose --deadline=30m

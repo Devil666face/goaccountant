@@ -21,7 +21,7 @@ jobs:
       - name: Set up Go
         uses: actions/setup-go@v4
         with:
-          go-version: "1.20"
+          go-version: "1.21"
       - name: Install go dependences
         run: go mod tidy
       - name: Build project
@@ -36,8 +36,6 @@ jobs:
         run: tar -cvzf ${{github.event.repository.name}}.tgz "$FILES"
         env:
           FILES: ${{github.event.repository.name}}
-      - name: Set tag name for release
-        run: echo "GITHUB_RELEASE_TAG=$(date +v%m.%d.%H.%M)" >> $GITHUB_ENV
 
       - name: Create Draft Release
         id: create_release
@@ -45,7 +43,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: ${{ env.GITHUB_RELEASE_TAG }}
+          tag_name: ${{ vars.RELEASE_TAG }}
           draft: true
           prerelease: false
 
