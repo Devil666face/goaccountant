@@ -6,21 +6,22 @@ import (
 )
 
 func UserList(c *fiber.Ctx) error {
-	return c.Render("user_list", fiber.Map{
-		"c": ViewCtx{c},
-	}, "base")
+	return ViewCtx{c}.RenderWithCtx("user_list", fiber.Map{}, "base")
 }
 
 func UserCreateForm(c *fiber.Ctx) error {
-	return c.Render("user_create", fiber.Map{
-		"c": ViewCtx{c},
-	})
+	return ViewCtx{c}.RenderWithCtx("user_create", fiber.Map{})
 }
 
 func UserCreate(c *fiber.Ctx) error {
 	u := models.User{}
 	if err := c.BodyParser(&u); err != nil {
-		return err
+		return fiber.ErrBadRequest
+	}
+	if err := u.Validate(); err != nil {
+		return ViewCtx{c}.RenderWithCtx("user_create", fiber.Map{
+			"Message": err.Error(),
+		})
 	}
 	return nil
 }

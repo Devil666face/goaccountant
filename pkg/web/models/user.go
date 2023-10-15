@@ -1,7 +1,21 @@
 package models
 
 import (
+	"fmt"
+
+	"github.com/gofiber/fiber/v2"
 	"gorm.io/gorm"
+)
+
+const (
+	PasswordLen = 8
+)
+
+var (
+	ErrEmptyUsername     = fiber.NewError(fiber.StatusBadRequest, "Username is required")
+	ErrPasswordMissmatch = fiber.NewError(fiber.StatusBadRequest, "Password mismatch")
+	ErrPasswordRequired  = fiber.NewError(fiber.StatusBadRequest, "Password is required")
+	ErrPasswordShort     = fiber.NewError(fiber.StatusBadRequest, fmt.Sprintf("The minimum len of password is %d", PasswordLen))
 )
 
 type User struct {
@@ -15,6 +29,22 @@ type User struct {
 func (u *User) Create(db *gorm.DB) error {
 	if err := db.Create(u); err != nil {
 		return err.Error
+	}
+	return nil
+}
+
+func (u *User) Validate() error {
+	if u.Username == "" {
+		return ErrEmptyUsername
+	}
+	if u.Password != u.PasswordConfirm {
+		return ErrPasswordMissmatch
+	}
+	if u.Password == "" || u.PasswordConfirm == "" {
+		return ErrPasswordRequired
+	}
+	if len([]rune(u.Password)) < PasswordLen {
+		return ErrPasswordShort
 	}
 	return nil
 }

@@ -13,6 +13,11 @@ type ViewCtx struct {
 	*fiber.Ctx
 }
 
+func (c ViewCtx) RenderWithCtx(name string, bind fiber.Map, layouts ...string) error {
+	bind["c"] = c
+	return c.Render(name, bind, layouts...)
+}
+
 func (c ViewCtx) Csrf() template.HTML {
 	html := `<input type="hidden" name="csrf" value="%s">`
 	return template.HTML(fmt.Sprintf(html, c.CsrfToken()))
