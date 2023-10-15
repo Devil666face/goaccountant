@@ -24,6 +24,7 @@ func New(cfg *config.Config, tables []any) *Database {
 		tables: tables,
 	}
 	if err := d.connect(); err != nil {
+		//nolint:revive //If database not open - close app
 		log.Fatalln(err)
 	}
 	return &d

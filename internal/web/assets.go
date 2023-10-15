@@ -39,6 +39,7 @@ func NewMedia() *Media {
 	path, err := utils.SetPath(assets.DirMedia)
 	if err != nil {
 		path = assets.DirMedia
+		//nolint:revive //If dir for media not created - close app
 		log.Fatalln(err)
 	}
 	return &Media{

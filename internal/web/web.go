@@ -85,6 +85,7 @@ func (a *App) redirectServer() {
 		return c.Redirect(a.config.HTTPSRedirect)
 	})
 	if err := app.Listen(a.config.ConnectHTTP); err != nil {
+		//nolint:revive //If connection for redirect server already busy - close app
 		log.Fatalln(err)
 	}
 }

@@ -25,6 +25,7 @@ func (c Ctx) RenderWithCtx(name string, bind fiber.Map, layouts ...string) error
 
 func (c Ctx) Csrf() template.HTML {
 	html := `<input type="hidden" name="csrf" value="%s">`
+	//nolint:gosec //Because not revive data from user
 	return template.HTML(fmt.Sprintf(html, c.CsrfToken()))
 }
 

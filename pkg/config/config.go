@@ -34,6 +34,7 @@ type Config struct {
 func New() *Config {
 	cfg := Config{}
 	if err := cleanenv.ReadEnv(&cfg); err != nil {
+		//nolint:revive //If not env's not set - close app
 		log.Fatalln(err)
 	}
 	cfg.ConnectHTTP = fmt.Sprintf("%v:%v", cfg.IP, cfg.PortHTTP)
