@@ -10,10 +10,10 @@ permissions:
   contents: read
 
 jobs:
-  lint:
+  test:
     name: Test variables
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-    name: Echo
-    run: echo "${{ env.RELEASE_TAG }} ${{ vars.RELEASE_TAG }}"
+      - name: Echo
+        run: echo "${{ env.RELEASE_TAG }} ${{ vars.RELEASE_TAG }}"
