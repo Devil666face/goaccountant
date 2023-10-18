@@ -1,22 +1,13 @@
 package middlewares
 
 import (
-	"github.com/Devil666face/goaccountant/pkg/config"
-	"github.com/Devil666face/goaccountant/pkg/store/database"
-	"github.com/Devil666face/goaccountant/pkg/store/session"
-
-	"github.com/gofiber/fiber/v2"
+	"github.com/Devil666face/goaccountant/pkg/web"
 )
 
-const (
-	Htmx      = "htmx"
-	hxRequest = "Hx-Request"
-)
-
-func HtmxMiddleware(c *fiber.Ctx, _ *config.Config, _ *database.Database, _ *session.Store) error {
-	c.Locals(Htmx, false)
-	if _, ok := c.GetReqHeaders()[hxRequest]; ok {
-		c.Locals(Htmx, true)
+func HtmxMiddleware(uof *web.Uof) error {
+	uof.Ctx().Locals(web.Htmx, false)
+	if _, ok := uof.Ctx().GetReqHeaders()[web.HxRequest]; ok {
+		uof.Ctx().Locals(web.Htmx, true)
 	}
-	return c.Next()
+	return uof.Ctx().Next()
 }

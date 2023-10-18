@@ -1,11 +1,9 @@
-package view
+package web
 
 import (
 	"fmt"
 	"html/template"
 	"log"
-
-	"github.com/Devil666face/goaccountant/pkg/web/middlewares"
 
 	"github.com/gofiber/fiber/v2"
 )
@@ -14,7 +12,7 @@ type Ctx struct {
 	*fiber.Ctx
 }
 
-func New(c *fiber.Ctx) *Ctx {
+func NewCtx(c *fiber.Ctx) *Ctx {
 	return &Ctx{c}
 }
 
@@ -30,14 +28,14 @@ func (c Ctx) Csrf() template.HTML {
 }
 
 func (c Ctx) CsrfToken() string {
-	if token, ok := c.Locals(middlewares.Csrf).(string); ok {
+	if token, ok := c.Locals(Csrf).(string); ok {
 		return token
 	}
 	return ""
 }
 
 func (c Ctx) IsHtmx() bool {
-	if htmx, ok := c.Locals(middlewares.Htmx).(bool); ok {
+	if htmx, ok := c.Locals(Htmx).(bool); ok {
 		return htmx
 	}
 	return false

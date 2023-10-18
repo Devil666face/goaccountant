@@ -1,33 +1,26 @@
 package middlewares
 
 import (
-	"github.com/Devil666face/goaccountant/pkg/config"
-	"github.com/Devil666face/goaccountant/pkg/store/database"
-	"github.com/Devil666face/goaccountant/pkg/store/session"
+	"github.com/Devil666face/goaccountant/pkg/web"
 
 	"github.com/gofiber/fiber/v2"
 )
 
-const (
-	AuthKey string = "authenticated"
-	UserID  string = "user_id"
-)
-
-func AuthMiddleware(c *fiber.Ctx, _ *config.Config, _ *database.Database, s *session.Store) error {
-	sess, err := s.Store().Get(c)
+func AuthMiddleware(uof *web.Uof) error {
+	sess, err := uof.Store().Get(uof.FiberCtx())
 	if err != nil {
-		return c.Status(fiber.StatusUnauthorized).
+		return uof.Ctx().Status(fiber.StatusUnauthorized).
 			RedirectToRoute("login", nil)
 	}
-	if sess.Get(AuthKey) == nil {
-		return c.Status(fiber.StatusUnauthorized).
+	if sess.Get(web.AuthKey) == nil {
+		return uof.Ctx().Status(fiber.StatusUnauthorized).
 			RedirectToRoute("login", nil)
 	}
-	uID := sess.Get(UserID)
+	uID := sess.Get(web.UserID)
 	if uID == nil {
-		return c.Status(fiber.StatusUnauthorized).
+		return uof.Ctx().Status(fiber.StatusUnauthorized).
 			RedirectToRoute("login", nil)
 	}
 	// Get user
-	return c.Next()
+	return uof.Ctx().Next()
 }
