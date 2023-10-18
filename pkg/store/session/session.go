@@ -15,8 +15,8 @@ const (
 )
 
 type Store struct {
-	Store         *session.Store
-	Storage       fiber.Storage
+	store         *session.Store
+	storage       fiber.Storage
 	config        *config.Config
 	sqliteConnect string
 	psqlConnect   string
@@ -28,16 +28,20 @@ func New(cfg *config.Config, db *database.Database) *Store {
 		sqliteConnect: db.SqliteConnect,
 		psqlConnect:   db.PsqlConnect,
 	}
-	s.setStorage()
-	s.Store = s.getStore()
+	if s.config.PostgresUse {
+		s.storage = s.NewPsqlStorage()
+	}
+	s.storage = s.NewSqliteStorage()
+	s.store = s.getStore()
 	return &s
 }
 
-func (s *Store) setStorage() {
-	if s.config.PostgresUse {
-		s.Storage = s.NewPsqlStorage()
-	}
-	s.Storage = s.NewSqliteStorage()
+func (s *Store) Store() *session.Store {
+	return s.store
+}
+
+func (s *Store) Storage() fiber.Storage {
+	return s.storage
 }
 
 func (s *Store) getStore() *session.Store {
@@ -45,6 +49,6 @@ func (s *Store) getStore() *session.Store {
 		// CookieSecure: true,
 		CookieHTTPOnly: true,
 		Expiration:     time.Hour * 5,
-		Storage:        s.Storage,
+		Storage:        s.storage,
 	})
 }

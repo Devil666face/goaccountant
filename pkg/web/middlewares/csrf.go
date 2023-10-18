@@ -18,7 +18,7 @@ const (
 
 func CsrfMiddleware(c *fiber.Ctx, _ *config.Config, _ *database.Database, s *session.Store) error {
 	return csrf.New(csrf.Config{
-		Storage:        s.Storage,
+		Storage:        s.Storage(),
 		KeyLookup:      "form:csrf",
 		CookieName:     "csrf_",
 		CookieSameSite: "Lax",

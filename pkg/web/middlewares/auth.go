@@ -14,7 +14,7 @@ const (
 )
 
 func AuthMiddleware(c *fiber.Ctx, _ *config.Config, _ *database.Database, s *session.Store) error {
-	sess, err := s.Store.Get(c)
+	sess, err := s.Store().Get(c)
 	if err != nil {
 		return c.Status(fiber.StatusUnauthorized).
 			RedirectToRoute("login", nil)

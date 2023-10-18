@@ -30,6 +30,10 @@ func New(cfg *config.Config, tables []any) *Database {
 	return &d
 }
 
+func (d *Database) DB() *gorm.DB {
+	return d.db
+}
+
 func (d *Database) Migrate() error {
 	return d.db.AutoMigrate(d.tables...)
 }
