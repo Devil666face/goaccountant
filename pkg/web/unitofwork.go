@@ -6,23 +6,23 @@ import (
 	"github.com/Devil666face/goaccountant/pkg/store/session"
 
 	"github.com/gofiber/fiber/v2"
-	fiberses "github.com/gofiber/fiber/v2/middleware/session"
+	fibersession "github.com/gofiber/fiber/v2/middleware/session"
 	"gorm.io/gorm"
 )
 
 type Uof struct {
-	ctx *Ctx
-	db  *database.Database
-	cfg *config.Config
-	ses *session.Store
+	ctx      *Ctx
+	database *database.Database
+	config   *config.Config
+	session  *session.Store
 }
 
-func NewUof(ctx *fiber.Ctx, db *database.Database, cfg *config.Config, ses *session.Store) *Uof {
+func NewUof(c *fiber.Ctx, db *database.Database, cfg *config.Config, s *session.Store) *Uof {
 	return &Uof{
-		ctx: NewCtx(ctx),
-		db:  db,
-		cfg: cfg,
-		ses: ses,
+		ctx:      NewCtx(c),
+		database: db,
+		config:   cfg,
+		session:  s,
 	}
 }
 
@@ -35,17 +35,17 @@ func (uof *Uof) FiberCtx() *fiber.Ctx {
 }
 
 func (uof *Uof) Database() *gorm.DB {
-	return uof.db.DB()
+	return uof.database.DB()
 }
 
-func (uof *Uof) Store() *fiberses.Store {
-	return uof.ses.Store()
+func (uof *Uof) Store() *fibersession.Store {
+	return uof.session.Store()
 }
 
 func (uof *Uof) Storage() fiber.Storage {
-	return uof.ses.Storage()
+	return uof.session.Storage()
 }
 
 func (uof *Uof) Config() *config.Config {
-	return uof.cfg
+	return uof.config
 }
