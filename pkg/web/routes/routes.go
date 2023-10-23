@@ -42,27 +42,27 @@ func New(router fiber.Router, cfg *config.Config, db *database.Database, s *sess
 	return &r
 }
 
-func (r *AppRouter) handler(f func(*web.Uof) error) func(c *fiber.Ctx) error {
+func (r *AppRouter) wrapper(handler func(*web.Uof) error) func(c *fiber.Ctx) error {
 	return func(c *fiber.Ctx) error {
 		uof := web.NewUof(c, r.database, r.config, r.session)
-		return f(uof)
+		return handler(uof)
 	}
 }
 
 func (r *AppRouter) setMiddlewares() {
 	for _, middleware := range r.middlewares {
-		r.router.Use(r.handler(middleware))
+		r.router.Use(r.wrapper(middleware))
 	}
 }
 
 func (r *AppRouter) setAuth() {
 	auth := r.router.Group("/auth")
-	auth.Get("/login", r.handler(handlers.Login)).Name("login")
+	auth.Get("/login", r.wrapper(handlers.Login)).Name("login")
 }
 
 func (r *AppRouter) setUser() {
 	user := r.router.Group("/user")
-	user.Get("/list", r.handler(handlers.UserList)).Name("user_list")
-	user.Get("/create", r.handler(handlers.UserCreateForm)).Name("user_create")
-	user.Post("/create", r.handler(handlers.UserCreate))
+	user.Get("/list", r.wrapper(handlers.UserList)).Name("user_list")
+	user.Get("/create", r.wrapper(handlers.UserCreateForm)).Name("user_create")
+	user.Post("/create", r.wrapper(handlers.UserCreate))
 }
