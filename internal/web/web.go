@@ -7,6 +7,7 @@ import (
 	"github.com/Devil666face/goaccountant/pkg/store/database"
 	"github.com/Devil666face/goaccountant/pkg/store/session"
 	"github.com/Devil666face/goaccountant/pkg/web/handlers"
+	"github.com/Devil666face/goaccountant/pkg/web/models"
 	"github.com/Devil666face/goaccountant/pkg/web/routes"
 
 	"github.com/gofiber/fiber/v2"
@@ -38,7 +39,9 @@ func New() *App {
 		static: NewStatic(),
 		media:  NewMedia(),
 		config: config.New(),
-		tables: []any{},
+		tables: []any{
+			&models.User{},
+		},
 	}
 	a.setStores()
 	a.setStatics()

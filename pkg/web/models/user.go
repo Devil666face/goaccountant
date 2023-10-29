@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"github.com/gofiber/fiber/v2"
+	"golang.org/x/crypto/bcrypt"
 	"gorm.io/gorm"
 )
 
@@ -16,18 +17,19 @@ var (
 	ErrPasswordMissmatch = fiber.NewError(fiber.StatusBadRequest, "Password mismatch")
 	ErrPasswordRequired  = fiber.NewError(fiber.StatusBadRequest, "Password is required")
 	ErrPasswordShort     = fiber.NewError(fiber.StatusBadRequest, fmt.Sprintf("The minimum len of password is %d", PasswordLen))
+	ErrPasswordEncrypt   = fiber.ErrInternalServerError
 )
 
 type User struct {
 	gorm.Model
-	Username        string `gorm:"uniqueIndex;not null" form:"username"`
+	Username        string `gorm:"unique;not null" form:"username"`
 	Password        string `gorm:"not null" form:"password"`
-	PasswordConfirm string `form:"password_confirm"`
+	PasswordConfirm string `gorm:"-" form:"password_confirm"`
 	Admin           bool   `gorm:"default:false" form:"admin"`
 }
 
 func (u *User) Create(db *gorm.DB) error {
-	if err := db.Create(u); err != nil {
+	if err := db.Create(u); err.Error != nil {
 		return err.Error
 	}
 	return nil
@@ -46,6 +48,18 @@ func (u *User) Validate() error {
 	if len([]rune(u.Password)) < PasswordLen {
 		return ErrPasswordShort
 	}
+	if u.hashPassword() != nil {
+		return ErrPasswordEncrypt
+	}
+	return nil
+}
+
+func (u *User) hashPassword() error {
+	bp, err := bcrypt.GenerateFromPassword([]byte(u.Password), 14)
+	if err != nil {
+		return err
+	}
+	u.Password = string(bp)
 	return nil
 }
 

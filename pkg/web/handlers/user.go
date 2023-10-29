@@ -1,6 +1,8 @@
 package handlers
 
 import (
+	"fmt"
+
 	"github.com/Devil666face/goaccountant/pkg/web"
 	"github.com/Devil666face/goaccountant/pkg/web/models"
 
@@ -30,5 +32,12 @@ func UserCreate(uof *web.Uof) error {
 			"Message": err.Error(),
 		})
 	}
-	return nil
+	if err := u.Create(uof.Database()); err != nil {
+		return uof.Ctx().RenderWithCtx("user_create", fiber.Map{
+			"Message": err.Error(),
+		})
+	}
+	return uof.Ctx().RenderWithCtx("user_content", fiber.Map{
+		"Success": fmt.Sprintf("User %s - created", u.Username),
+	})
 }

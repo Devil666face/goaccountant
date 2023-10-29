@@ -27,6 +27,9 @@ func New(cfg *config.Config, tables []any) *Database {
 		//nolint:revive //If database not open - close app
 		log.Fatalln(err)
 	}
+	if err := d.migrate(); err != nil {
+		log.Print(err)
+	}
 	return &d
 }
 
@@ -34,7 +37,7 @@ func (d *Database) DB() *gorm.DB {
 	return d.db
 }
 
-func (d *Database) Migrate() error {
+func (d *Database) migrate() error {
 	return d.db.AutoMigrate(d.tables...)
 }
 
