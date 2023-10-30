@@ -3,8 +3,8 @@ package models
 import (
 	"fmt"
 
+	"github.com/Devil666face/goaccountant/pkg/utils"
 	"github.com/gofiber/fiber/v2"
-	"golang.org/x/crypto/bcrypt"
 	"gorm.io/gorm"
 )
 
@@ -36,6 +36,9 @@ func (u *User) Create(db *gorm.DB) error {
 }
 
 func (u *User) Validate() error {
+	if !utils.ValidateUserInputs(u.Username, u.Password, u.PasswordConfirm) {
+		return fiber.ErrInternalServerError
+	}
 	if u.Username == "" {
 		return ErrEmptyUsername
 	}
@@ -55,11 +58,11 @@ func (u *User) Validate() error {
 }
 
 func (u *User) hashPassword() error {
-	bp, err := bcrypt.GenerateFromPassword([]byte(u.Password), 14)
+	password, err := utils.GenHash(u.Password)
 	if err != nil {
 		return err
 	}
-	u.Password = string(bp)
+	u.Password = password
 	return nil
 }
 
