@@ -11,8 +11,15 @@
     {{ template "user_content" . }}
   </div>
 </div>
-{{ with $id:="create_user" }}{{ template "modal_dialog" $id }}{{ end }}
-{{ with $id:="edit_user" }}{{ template "modal_dialog" $id }}{{ end }}
+
+{{ with $id:="create_user" }}
+{{ template "modal" $id }}
+{{ end }}
+
+{{ with $id:="edit_user" }}
+{{ template "modal" $id }}
+{{ end }}
+
 {{ end }}
 
 {{ block "user_content" . }}
@@ -22,7 +29,7 @@
     <div class="col">{{ .ID }}</div>
     <div class="col">{{ .Username }}</div>
     <div class="col">{{ if .Admin }}✅{{ else }}❌{{ end }}</div>
-    <div class="col">
+    {{/* <div class="col">
       <button type="button" class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#edit_user"
         hx-get='{{ .c.URLto "user-edit" "id" .ID }}' hx-swap="innerHTML" hx-target="#edit_user_content">
         Edit 📝
@@ -34,6 +41,7 @@
         Delete 🗑
       </button>
     </div>
+    */}}
   </div>
   {{ end }}
 </div>

@@ -5,7 +5,6 @@ import (
 	"github.com/Devil666face/goaccountant/pkg/store/database"
 	"github.com/Devil666face/goaccountant/pkg/store/session"
 	"github.com/Devil666face/goaccountant/pkg/web"
-	"github.com/Devil666face/goaccountant/pkg/web/handlers"
 	"github.com/Devil666face/goaccountant/pkg/web/middlewares"
 
 	"github.com/gofiber/fiber/v2"
@@ -31,9 +30,9 @@ func New(router fiber.Router, cfg *config.Config, db *database.Database, s *sess
 		database: db,
 		session:  s,
 		middlewares: []func(*web.Uof) error{
-			middlewares.AllowedHostMiddleware,
-			middlewares.CsrfMiddleware,
-			middlewares.HtmxMiddleware,
+			middlewares.AllowHost,
+			middlewares.Csrf,
+			middlewares.Htmx,
 		},
 	}
 	r.setMiddlewares()
@@ -53,16 +52,4 @@ func (r *AppRouter) setMiddlewares() {
 	for _, middleware := range r.middlewares {
 		r.router.Use(r.wrapper(middleware))
 	}
-}
-
-func (r *AppRouter) setAuth() {
-	auth := r.router.Group("/auth")
-	auth.Get("/login", r.wrapper(handlers.Login)).Name("login")
-}
-
-func (r *AppRouter) setUser() {
-	user := r.router.Group("/user")
-	user.Get("/list", r.wrapper(handlers.UserList)).Name("user_list")
-	user.Get("/create", r.wrapper(handlers.UserCreateForm)).Name("user_create")
-	user.Post("/create", r.wrapper(handlers.UserCreate))
 }

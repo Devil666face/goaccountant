@@ -1,12 +1,7 @@
 {{ define "user_form" }}
-{{ .c.Csrf }}
+{{ template "csrf" . }}
 <div class="modal-body">
-  {{ if .Message }}
-  <div class="alert alert-danger text-left" role="alert">❌ {{ .Message }}</div>
-  {{ end }}
-  {{ if .Success }}
-  <div class="alert alert-success text-left" role="alert">✅ {{ .Success }}</div>
-  {{ end }}
+  {{ template "alert" . }}
   <label>Username ➡:</label>
   <input name="username" required placeholder="Username" type="text" value="{{ .User.Username }}" autofocus
     class="form-control" />

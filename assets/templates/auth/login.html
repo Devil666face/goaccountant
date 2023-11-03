@@ -1,13 +1,9 @@
 {{ define "login" }}
 <main class="form-signin w-100 m-auto">
-  <form method="POST" enctype="multipart/form-data" action='{{ .c.URL "login" }}'>
-    {{ .c.Csrf }}
+  <form hx-post='{{ .c.URL "login" }}' hx-push-url="true" hx-target="body" enctype="multipart/form-data">
+    {{ template "csrf" . }}
     <h1 class="h3 mb-3 fw-normal">Sing in 🚪</h1>
-    {{ if .Message }}
-    <div class="alert alert-danger text-left" role="alert">
-      {{ .Message }}
-    </div>
-    {{ end }}
+    {{ template "alert" . }}
     <div class="form-floating">
       <input type="text" name="username" autofocus="" autocapitalize="none" autocomplete="username" maxlength="150"
         required="" id="id_username" class="form-control" placeholder="Login" value="{{ .Username }}" />

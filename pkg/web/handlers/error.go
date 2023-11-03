@@ -13,7 +13,7 @@ func DefaultErrorHandler(c *fiber.Ctx, err error) error {
 	if e, ok := err.(*fiber.Error); ok {
 		code = e.Code
 	}
-	return web.NewCtx(c).RenderWithCtx("error", fiber.Map{
+	return web.NewViewCtx(c).RenderWithCtx("error", fiber.Map{
 		"Statuscode": code,
 		"Error":      err.Error(),
 		"Title":      fmt.Sprintf("Error %d", code),

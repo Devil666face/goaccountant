@@ -1,0 +1,15 @@
+{{ define "alert" }}
+
+{{ if .Message }}
+<div class="alert alert-danger text-left" role="alert">
+  ❌ {{ .Message }}
+</div>
+{{ end }}
+
+{{ if .Success }}
+<div class="alert alert-success text-left" role="alert">
+  ✅ {{ .Success }}
+</div>
+{{ end }}
+
+{{ end }}

@@ -1,6 +1,7 @@
 package models
 
 import (
+	"errors"
 	"fmt"
 
 	"github.com/Devil666face/goaccountant/pkg/utils"
@@ -18,6 +19,7 @@ var (
 	ErrPasswordRequired  = fiber.NewError(fiber.StatusBadRequest, "Password is required")
 	ErrPasswordShort     = fiber.NewError(fiber.StatusBadRequest, fmt.Sprintf("The minimum len of password is %d", PasswordLen))
 	ErrPasswordEncrypt   = fiber.ErrInternalServerError
+	ErrUserNotUniq       = fiber.NewError(fiber.StatusBadRequest, "User already create")
 )
 
 type User struct {
@@ -29,10 +31,21 @@ type User struct {
 }
 
 func (u *User) Create(db *gorm.DB) error {
+	// If user with this username is found return err
+	if u.IsFound(db) {
+		return ErrUserNotUniq
+	}
+	// if err := u.GetUser(db, u.Username); !errors.Is(err, gorm.ErrRecordNotFound) {
+	// 	return ErrUserNotUniq
+	// }
 	if err := db.Create(u); err.Error != nil {
 		return err.Error
 	}
 	return nil
+}
+
+func (u *User) IsFound(db *gorm.DB) bool {
+	return !errors.Is(u.GetUser(db, u.Username), gorm.ErrRecordNotFound)
 }
 
 func (u *User) Validate() error {
@@ -51,6 +64,7 @@ func (u *User) Validate() error {
 	if len([]rune(u.Password)) < PasswordLen {
 		return ErrPasswordShort
 	}
+	// Hash password and do u.Password = password
 	if u.hashPassword() != nil {
 		return ErrPasswordEncrypt
 	}
@@ -64,6 +78,23 @@ func (u *User) hashPassword() error {
 	}
 	u.Password = password
 	return nil
+}
+
+func (u *User) ComparePassword(password string) bool {
+	if err := utils.ComparePassword(u.Password, password); err == nil {
+		return true
+	}
+	return false
+}
+
+func GetAllUsers(db *gorm.DB) []User {
+	users := []User{}
+	db.Find(&users)
+	return users
+}
+
+func (u *User) GetUser(db *gorm.DB, username string) error {
+	return db.Where("username = ?", username).Take(&u).Error
 }
 
 // func (user *User) Set(username string, password string, admin bool) {

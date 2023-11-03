@@ -6,21 +6,21 @@ import (
 	"github.com/gofiber/fiber/v2"
 )
 
-func AuthMiddleware(uof *web.Uof) error {
+func Auth(uof *web.Uof) error {
 	sess, err := uof.Store().Get(uof.FiberCtx())
 	if err != nil {
-		return uof.Ctx().Status(fiber.StatusUnauthorized).
+		return uof.ViewCtx().Status(fiber.StatusUnauthorized).
 			RedirectToRoute("login", nil)
 	}
 	if sess.Get(web.AuthKey) == nil {
-		return uof.Ctx().Status(fiber.StatusUnauthorized).
+		return uof.ViewCtx().Status(fiber.StatusUnauthorized).
 			RedirectToRoute("login", nil)
 	}
 	uID := sess.Get(web.UserID)
 	if uID == nil {
-		return uof.Ctx().Status(fiber.StatusUnauthorized).
+		return uof.ViewCtx().Status(fiber.StatusUnauthorized).
 			RedirectToRoute("login", nil)
 	}
 	// Get user
-	return uof.Ctx().Next()
+	return uof.ViewCtx().Next()
 }

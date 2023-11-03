@@ -9,14 +9,18 @@ import (
 	"github.com/gofiber/fiber/v2/utils"
 )
 
-func CsrfMiddleware(uof *web.Uof) error {
+func Csrf(uof *web.Uof) error {
+	// Optional. Default: "header:X-CSRF-Token"
 	return csrf.New(csrf.Config{
-		Storage:        uof.Storage(),
-		KeyLookup:      "form:csrf",
-		CookieName:     "csrf_",
+		Storage: uof.Storage(),
+		// KeyLookup:  "form:csrf",
+		CookieName: "csrf",
+		// CookieName:     "csrf_",
 		CookieSameSite: "Lax",
 		Expiration:     1 * time.Hour,
 		KeyGenerator:   utils.UUID,
 		ContextKey:     web.Csrf,
+		CookieHTTPOnly: true,
+		SingleUseToken: true,
 	})(uof.FiberCtx())
 }

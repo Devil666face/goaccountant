@@ -1,57 +1,62 @@
 package web
 
 import (
-	"fmt"
-	"html/template"
 	"log"
 
 	"github.com/gofiber/fiber/v2"
 )
 
-type Ctx struct {
+type ViewCtx struct {
 	*fiber.Ctx
 }
 
-func NewCtx(c *fiber.Ctx) *Ctx {
-	return &Ctx{c}
+func NewViewCtx(c *fiber.Ctx) *ViewCtx {
+	return &ViewCtx{c}
 }
 
-func (c Ctx) RenderWithCtx(name string, bind fiber.Map, layouts ...string) error {
+func (c ViewCtx) RenderWithCtx(name string, bind fiber.Map, layouts ...string) error {
 	bind["c"] = c
 	return c.Render(name, bind, layouts...)
 }
 
-func (c Ctx) Csrf() template.HTML {
-	html := `<input type="hidden" name="csrf" value="%s">`
-	//nolint:gosec //Because not revive data from user
-	return template.HTML(fmt.Sprintf(html, c.CsrfToken()))
-}
+// func (c Ctx) Csrf() template.HTML {
+// 	html := `<input type="hidden" name="csrf" value="%s">`
+// 	//nolint:gosec //Because not revive data from user
+// 	return template.HTML(fmt.Sprintf(html, c.CsrfToken()))
+// }
 
-func (c Ctx) CsrfToken() string {
+func (c ViewCtx) CsrfToken() string {
 	if token, ok := c.Locals(Csrf).(string); ok {
 		return token
 	}
 	return ""
 }
 
-func (c Ctx) IsHtmx() bool {
+func (c ViewCtx) IsHtmx() bool {
 	if htmx, ok := c.Locals(Htmx).(bool); ok {
 		return htmx
 	}
 	return false
 }
 
-func (c Ctx) URL(name string) string {
+func (c ViewCtx) IsHtmxCurrentURL() bool {
+	if url, ok := c.GetReqHeaders()[HxCurrentURL]; ok {
+		return url[0] == c.BaseURL()+c.OriginalURL()
+	}
+	return false
+}
+
+func (c ViewCtx) URL(name string) string {
 	return c.getRouteURL(name, fiber.Map{})
 }
 
-func (c Ctx) URLto(name, key string, val any) string {
+func (c ViewCtx) URLto(name, key string, val any) string {
 	return c.getRouteURL(name, fiber.Map{
 		key: val,
 	})
 }
 
-func (c Ctx) getRouteURL(name string, fmap fiber.Map) string {
+func (c ViewCtx) getRouteURL(name string, fmap fiber.Map) string {
 	url, err := c.GetRouteURL(name, fmap)
 	if err != nil {
 		log.Printf("Url - %s not found", name)
