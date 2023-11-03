@@ -1,5 +1,5 @@
 {{ define "login" }}
-<main class="form-signin w-100 m-auto">
+<main class="form-signin m-auto h-100 d-flex align-items-center justify-content-center">
   <form hx-post='{{ .c.URL "login" }}' hx-push-url="true" hx-target="body" enctype="multipart/form-data">
     {{ template "csrf" . }}
     <h1 class="h3 mb-3 fw-normal">Sing in 🚪</h1>
