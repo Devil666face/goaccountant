@@ -7,10 +7,7 @@ import (
 var policy = bluemonday.StrictPolicy()
 
 func validate(in string) bool {
-	if len([]rune(in)) == len([]rune(policy.Sanitize(in))) {
-		return true
-	}
-	return false
+	return len([]rune(in)) == len([]rune(policy.Sanitize(in)))
 }
 
 func ValidateUserInputs(fields ...string) bool {
