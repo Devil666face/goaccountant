@@ -45,7 +45,7 @@ func (u *User) Create(db *gorm.DB) error {
 }
 
 func (u *User) IsFound(db *gorm.DB) bool {
-	return !errors.Is(u.GetUser(db, u.Username), gorm.ErrRecordNotFound)
+	return !errors.Is(u.GetUserByUsername(db, u.Username), gorm.ErrRecordNotFound)
 }
 
 func (u *User) Validate() error {
@@ -93,7 +93,7 @@ func GetAllUsers(db *gorm.DB) []User {
 	return users
 }
 
-func (u *User) GetUser(db *gorm.DB, username string) error {
+func (u *User) GetUserByUsername(db *gorm.DB, username string) error {
 	return db.Where("username = ?", username).Take(&u).Error
 }
 
