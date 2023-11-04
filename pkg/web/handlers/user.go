@@ -24,9 +24,7 @@ func UserListPage(uof *web.Uof) error {
 }
 
 func UserEditForm(uof *web.Uof) error {
-	var (
-		u = models.User{}
-	)
+	u := models.User{}
 	id, err := strconv.Atoi(uof.ViewCtx().Params("id"))
 	if err != nil {
 		return fiber.ErrNotFound
@@ -91,6 +89,8 @@ func UserEdit(uof *web.Uof) error {
 			})
 		}
 	}
+
+	// This
 	u.Username, u.Admin, u.Password = in.Username, in.Admin, in.Password
 	if err := u.Update(uof.Database()); err != nil {
 		return uof.ViewCtx().RenderWithCtx("user_edit", fiber.Map{
