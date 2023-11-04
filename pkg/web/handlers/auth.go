@@ -7,6 +7,8 @@ import (
 	"github.com/gofiber/fiber/v2"
 )
 
+var ErrInSession = fiber.ErrInternalServerError
+
 func LoginPage(uof *web.Uof) error {
 	return uof.ViewCtx().RenderWithCtx("login", fiber.Map{
 		"Title": "Login",
@@ -22,25 +24,23 @@ func Login(uof *web.Uof) error {
 		return err
 	}
 	u.Username = in.Username
-	if !u.IsFound(uof.Database()) {
+	if err := u.LoginValidate(uof.Database(), in.Password); err != nil {
 		return uof.ViewCtx().RenderWithCtx("login", fiber.Map{
 			"Title":   "Login",
-			"Message": "Username or password is wrong",
+			"Message": err.Error(),
 		}, "base")
 	}
-	if !u.ComparePassword(in.Password) {
-		return uof.ViewCtx().RenderWithCtx("login", fiber.Map{
-			"Title":   "Login",
-			"Message": "Username or password is wrong",
-		}, "base")
+	// if uof.GetSession() != nil {
+	// 	return fiber.ErrInternalServerError
+	// }
+	if err := uof.SetInSession(web.AuthKey, true); err != nil {
+		return ErrInSession
 	}
-	if uof.GetSession() != nil {
-		return fiber.ErrInternalServerError
+	if err := uof.SetInSession(web.UserID, u.ID); err != nil {
+		return ErrInSession
 	}
-	uof.SetInSession(web.AuthKey, true)
-	uof.SetInSession(web.UserID, u.ID)
-	if err := uof.SaveSession(); err != nil {
-		return fiber.ErrInternalServerError
-	}
+	// if err := uof.SaveSession(); err != nil {
+	// 	return fiber.ErrInternalServerError
+	// }
 	return uof.ViewCtx().RedirectToRoute("user_list", fiber.Map{})
 }

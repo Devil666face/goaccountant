@@ -12,32 +12,31 @@
   </div>
 </div>
 
-{{ with $id:="create_user" }}
-{{ template "modal" $id }}
-{{ end }}
+{{ $create_id:="create_user" }}
+{{ template "modal" $create_id }}
 
-{{ with $id:="edit_user" }}
-{{ template "modal" $id }}
-{{ end }}
+{{ $edit_id:="edit_user" }}
+{{ template "modal" $edit_id }}
 
 {{ end }}
 
 {{ block "user_content" . }}
+{{ $c := .c }}
 <div id="users">
   {{ range .Users }}
   <div class="row mb-2" id="user_{{ .ID }}">
     <div class="col">{{ .ID }}</div>
     <div class="col">{{ .Username }}</div>
     <div class="col">{{ if .Admin }}✅{{ else }}❌{{ end }}</div>
-    {{/* <div class="col">
+    <div class="col">
       <button type="button" class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#edit_user"
-        hx-get='{{ .c.URLto "user-edit" "id" .ID }}' hx-swap="innerHTML" hx-target="#edit_user_content">
+        hx-get='{{ $c.URLto "user_edit" "id" .ID }}' hx-swap="innerHTML" hx-target="#edit_user_content">
         Edit 📝
       </button>
     </div>
-    <div class="col">
+    {{/* <div class="col">
       <button type="button" class="btn btn-outline-danger" hx-confirm="🗑 Delete user - {{ .Username }}?"
-        hx-swap="innerHTML" hx-delete='{{ .c.URLto "user-delete" "id" .ID }}' hx-target="#users">
+        hx-swap="innerHTML" hx-delete='{{ .c.URLto "user_delete" "id" .ID }}' hx-target="#users">
         Delete 🗑
       </button>
     </div>

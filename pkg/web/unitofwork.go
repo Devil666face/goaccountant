@@ -59,8 +59,19 @@ func (uof *Uof) GetSession() error {
 	return nil
 }
 
-func (uof *Uof) SetInSession(key string, val any) {
+func (uof *Uof) SetInSession(key string, val any) error {
+	if err := uof.GetSession(); err != nil {
+		return err
+	}
 	uof.ctxsession.Set(key, val)
+	return uof.SaveSession()
+}
+
+func (uof *Uof) GetFromSession(key string) (any, error) {
+	if err := uof.GetSession(); err != nil {
+		return nil, err
+	}
+	return uof.ctxsession.Get(key), nil
 }
 
 func (uof *Uof) SaveSession() error {

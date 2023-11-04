@@ -1,7 +1,9 @@
 package handlers
 
 import (
+	"errors"
 	"fmt"
+	"strconv"
 
 	"github.com/Devil666face/goaccountant/pkg/web"
 	"github.com/Devil666face/goaccountant/pkg/web/models"
@@ -19,6 +21,24 @@ func UserListPage(uof *web.Uof) error {
 		"Title": "List of users",
 		"Users": models.GetAllUsers(uof.Database()),
 	}, "base")
+}
+
+func UserEditForm(uof *web.Uof) error {
+	var (
+		u = models.User{}
+	)
+	id, err := strconv.Atoi(uof.ViewCtx().Params("id"))
+	if err != nil {
+		return fiber.ErrNotFound
+	}
+	u.ID = uint(id)
+	if err := u.GetUser(uof.Database()); err != nil {
+		return fiber.ErrNotFound
+	}
+	u.Password = ""
+	return uof.ViewCtx().RenderWithCtx("user_edit", fiber.Map{
+		web.UserKey: u,
+	})
 }
 
 func UserCreateForm(uof *web.Uof) error {
@@ -42,5 +62,44 @@ func UserCreate(uof *web.Uof) error {
 	}
 	return uof.ViewCtx().RenderWithCtx("user_create", fiber.Map{
 		"Success": fmt.Sprintf("User %s - created", u.Username),
+	})
+}
+
+func UserEdit(uof *web.Uof) error {
+	var (
+		u  = models.User{}
+		in = models.User{}
+	)
+	if err := uof.ViewCtx().BodyParser(&in); err != nil {
+		return err
+	}
+	id, err := strconv.Atoi(uof.ViewCtx().Params("id"))
+	if err != nil {
+		return fiber.ErrNotFound
+	}
+	in.ID = uint(id)
+	u.ID = in.ID
+	if err := u.GetUser(uof.Database()); err != nil {
+		return fiber.ErrNotFound
+	}
+	if err := in.Validate(); err != nil {
+		if errors.Is(err, models.ErrPasswordRequired) {
+			in.Password, in.PasswordConfirm = u.Password, u.Password
+		} else {
+			return uof.ViewCtx().RenderWithCtx("user_edit", fiber.Map{
+				web.UserKey: u,
+			})
+		}
+	}
+	u.Username, u.Admin, u.Password = in.Username, in.Admin, in.Password
+	if err := u.Update(uof.Database()); err != nil {
+		return uof.ViewCtx().RenderWithCtx("user_edit", fiber.Map{
+			web.UserKey: u,
+			"Message":   err,
+		})
+	}
+	return uof.ViewCtx().RenderWithCtx("user_edit", fiber.Map{
+		web.UserKey: u,
+		"Success":   "Successful update user",
 	})
 }

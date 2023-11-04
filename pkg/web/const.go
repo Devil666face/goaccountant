@@ -2,6 +2,7 @@ package web
 
 const (
 	AuthKey      = "authenticated"
+	UserKey      = "User"
 	UserID       = "user_id"
 	Csrf         = "csrf"
 	Htmx         = "htmx"

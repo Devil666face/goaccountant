@@ -15,7 +15,7 @@ const (
 
 var (
 	ErrEmptyUsername     = fiber.NewError(fiber.StatusBadRequest, "Username is required")
-	ErrPasswordMissmatch = fiber.NewError(fiber.StatusBadRequest, "Password mismatch")
+	ErrPasswordMissmatch = fiber.NewError(fiber.StatusBadRequest, "Passwords mismatch")
 	ErrPasswordRequired  = fiber.NewError(fiber.StatusBadRequest, "Password is required")
 	ErrPasswordShort     = fiber.NewError(fiber.StatusBadRequest, fmt.Sprintf("The minimum len of password is %d", PasswordLen))
 	ErrPasswordEncrypt   = fiber.ErrInternalServerError
@@ -38,18 +38,27 @@ func (u *User) Create(db *gorm.DB) error {
 	// if err := u.GetUser(db, u.Username); !errors.Is(err, gorm.ErrRecordNotFound) {
 	// 	return ErrUserNotUniq
 	// }
-	if err := db.Create(u); err.Error != nil {
-		return err.Error
-	}
-	return nil
+	return db.Create(u).Error
+	// if err := db.Create(u); err.Error != nil {
+	// 	return err.Error
+	// }
+	// return nil
+}
+
+func (u *User) Update(db *gorm.DB) error {
+	return db.Save(u).Error
 }
 
 func (u *User) IsFound(db *gorm.DB) bool {
 	return !errors.Is(u.GetUserByUsername(db, u.Username), gorm.ErrRecordNotFound)
 }
 
+func (u *User) validateInput() bool {
+	return utils.ValidateUserInputs(u.Username, u.Password, u.PasswordConfirm)
+}
+
 func (u *User) Validate() error {
-	if !utils.ValidateUserInputs(u.Username, u.Password, u.PasswordConfirm) {
+	if !u.validateInput() {
 		return fiber.ErrInternalServerError
 	}
 	if u.Username == "" {
@@ -93,8 +102,14 @@ func GetAllUsers(db *gorm.DB) []User {
 	return users
 }
 
+func (u *User) GetUser(db *gorm.DB) error {
+	return db.First(u, u.ID).Error
+}
+
 func (u *User) GetUserByUsername(db *gorm.DB, username string) error {
-	return db.Where("username = ?", username).Take(&u).Error
+	u.ID = 0
+	return db.Where("username = ?", username).First(&u).Error
+	// return db.Where("username = ?", username).Take(&u).Error
 }
 
 // func (user *User) Set(username string, password string, admin bool) {
@@ -113,10 +128,6 @@ func (u *User) GetUserByUsername(db *gorm.DB, username string) error {
 
 // func DeleteUser(user *User) *gorm.DB {
 // 	return database.DB.Unscoped().Delete(user)
-// }
-
-// func GetUser(dest *User, id string) *gorm.DB {
-// 	return database.DB.First(dest, id)
 // }
 
 // func GetUserByUsername(dest *User, username string) *gorm.DB {
