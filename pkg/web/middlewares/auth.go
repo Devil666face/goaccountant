@@ -32,3 +32,11 @@ func Auth(uof *web.Uof) error {
 	uof.ViewCtx().Locals(web.UserKey, u)
 	return uof.ViewCtx().Next()
 }
+
+func AlreadyLogin(uof *web.Uof) error {
+	auth, err := uof.GetFromSession(web.AuthKey)
+	if auth, ok := auth.(bool); auth && ok && err == nil {
+		return uof.ViewCtx().RedirectToRoute("index", nil)
+	}
+	return uof.ViewCtx().Next()
+}

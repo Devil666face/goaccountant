@@ -42,5 +42,5 @@ func Login(uof *web.Uof) error {
 	// if err := uof.SaveSession(); err != nil {
 	// 	return fiber.ErrInternalServerError
 	// }
-	return uof.ViewCtx().RedirectToRoute("user_list", fiber.Map{})
+	return uof.ViewCtx().RedirectToRoute("index", fiber.Map{})
 }

@@ -36,6 +36,7 @@ func New(router fiber.Router, cfg *config.Config, db *database.Database, s *sess
 		},
 	}
 	r.setMiddlewares()
+	r.setIndex()
 	r.setAuth()
 	r.setUser()
 	return &r
