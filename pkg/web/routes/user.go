@@ -31,9 +31,15 @@ func (r *AppRouter) setUser() {
 		r.wrapper(middlewares.HxOnly),
 		r.wrapper(handlers.UserEditForm),
 	).Name("user_edit")
-	user.Post(
+	user.Put(
 		"/:id<int>/edit",
 		r.wrapper(middlewares.HxOnly),
 		r.wrapper(handlers.UserEdit),
 	)
+
+	user.Delete(
+		"/:id<int>/delete",
+		r.wrapper(middlewares.HxOnly),
+		r.wrapper(handlers.UserDelete),
+	).Name("user_delete")
 }

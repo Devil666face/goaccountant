@@ -30,7 +30,7 @@ func UserEditForm(uof *web.Uof) error {
 		return fiber.ErrNotFound
 	}
 	u.ID = uint(id)
-	if err := u.GetUser(uof.Database()); err != nil {
+	if err := u.Get(uof.Database()); err != nil {
 		return fiber.ErrNotFound
 	}
 	u.Password = ""
@@ -77,7 +77,7 @@ func UserEdit(uof *web.Uof) error {
 	}
 	in.ID = uint(id)
 	u.ID = in.ID
-	if err := u.GetUser(uof.Database()); err != nil {
+	if err := u.Get(uof.Database()); err != nil {
 		return fiber.ErrNotFound
 	}
 	if err := in.Validate(); err != nil {
@@ -89,8 +89,6 @@ func UserEdit(uof *web.Uof) error {
 			})
 		}
 	}
-
-	// This
 	u.Username, u.Admin, u.Password = in.Username, in.Admin, in.Password
 	if err := u.Update(uof.Database()); err != nil {
 		return uof.ViewCtx().RenderWithCtx("user_edit", fiber.Map{
@@ -101,5 +99,26 @@ func UserEdit(uof *web.Uof) error {
 	return uof.ViewCtx().RenderWithCtx("user_edit", fiber.Map{
 		web.UserKey: u,
 		"Success":   "Successful update user",
+	})
+}
+
+func UserDelete(uof *web.Uof) error {
+	u := models.User{}
+	if err := uof.ViewCtx().BodyParser(&u); err != nil {
+		return err
+	}
+	id, err := strconv.Atoi(uof.ViewCtx().Params("id"))
+	if err != nil {
+		return fiber.ErrNotFound
+	}
+	u.ID = uint(id)
+	if err := u.Get(uof.Database()); err != nil {
+		return fiber.ErrNotFound
+	}
+	if err := u.Delete(uof.Database()); err != nil {
+		return err
+	}
+	return uof.ViewCtx().RenderWithCtx("user_content", fiber.Map{
+		"Users": models.GetAllUsers(uof.Database()),
 	})
 }

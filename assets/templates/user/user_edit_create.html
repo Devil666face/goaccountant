@@ -7,7 +7,7 @@
 
 {{ define "user_edit" }}
 {{ template "modal_header" . }}
-<form hx-post='{{ .c.URLto "user_edit" "id" .User.ID }}' hx-swap="innerHTML" hx-target="#edit_user_content">
+<form hx-put='{{ .c.URLto "user_edit" "id" .User.ID }}' hx-swap="innerHTML" hx-target="#edit_user_content">
   {{template "user_form" . }}
 </form>
 {{ end }}

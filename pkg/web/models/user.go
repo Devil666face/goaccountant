@@ -50,7 +50,7 @@ func (u *User) Update(db *gorm.DB) error {
 }
 
 func (u *User) IsFound(db *gorm.DB) bool {
-	return !errors.Is(u.GetUserByUsername(db, u.Username), gorm.ErrRecordNotFound)
+	return !errors.Is(u.GetByUsername(db, u.Username), gorm.ErrRecordNotFound)
 }
 
 func (u *User) validateInput() bool {
@@ -102,11 +102,15 @@ func GetAllUsers(db *gorm.DB) []User {
 	return users
 }
 
-func (u *User) GetUser(db *gorm.DB) error {
+func (u *User) Get(db *gorm.DB) error {
 	return db.First(u, u.ID).Error
 }
 
-func (u *User) GetUserByUsername(db *gorm.DB, username string) error {
+func (u *User) Delete(db *gorm.DB) error {
+	return db.Unscoped().Delete(u).Error
+}
+
+func (u *User) GetByUsername(db *gorm.DB, username string) error {
 	u.ID = 0
 	return db.Where("username = ?", username).First(&u).Error
 	// return db.Where("username = ?", username).Take(&u).Error

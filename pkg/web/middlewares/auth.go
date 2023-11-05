@@ -25,7 +25,7 @@ func Auth(uof *web.Uof) error {
 		return uof.ViewCtx().Status(fiber.StatusUnauthorized).
 			RedirectToRoute("login", nil)
 	}
-	if err := u.GetUser(uof.Database()); err != nil {
+	if err := u.Get(uof.Database()); err != nil {
 		return uof.ViewCtx().Status(fiber.StatusUnauthorized).
 			RedirectToRoute("login", nil)
 	}
