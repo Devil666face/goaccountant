@@ -50,6 +50,11 @@ func (c ViewCtx) SetClientRefresh() {
 	c.Set(HXRefresh, "true")
 }
 
+func (c ViewCtx) ClientRedirect(redirectURL string) error {
+	c.Set(HXRedirect, redirectURL)
+	return c.SendStatus(fiber.StatusFound)
+}
+
 func (c ViewCtx) URL(name string) string {
 	return c.getRouteURL(name, fiber.Map{})
 }

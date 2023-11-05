@@ -9,5 +9,6 @@ const (
 	HxRequest    = "Hx-Request"
 	HxCurrentURL = "Hx-Current-Url"
 	HXRefresh    = "HX-Refresh"
+	HXRedirect   = "HX-Redirect"
 	Host         = "Host"
 )

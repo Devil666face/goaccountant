@@ -43,6 +43,6 @@ func Login(uof *web.Uof) error {
 	// 	return fiber.ErrInternalServerError
 	// }
 
-	// Add Hx-Redirect to index page
-	return uof.ViewCtx().RedirectToRoute("index", fiber.Map{})
+	// return uof.ViewCtx().RedirectToRoute("index", fiber.Map{})
+	return uof.ViewCtx().ClientRedirect(uof.ViewCtx().URL("index"))
 }
