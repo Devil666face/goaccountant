@@ -8,5 +8,6 @@ const (
 	Htmx         = "htmx"
 	HxRequest    = "Hx-Request"
 	HxCurrentURL = "Hx-Current-Url"
+	HXRefresh    = "HX-Refresh"
 	Host         = "Host"
 )

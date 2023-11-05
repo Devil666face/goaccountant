@@ -6,7 +6,8 @@ import (
 )
 
 func Index(uof *web.Uof) error {
-	return uof.ViewCtx().RenderWithCtx("login", fiber.Map{
+	uof.ViewCtx().SetClientRefresh()
+	return uof.ViewCtx().RenderWithCtx("index", fiber.Map{
 		"Title": "Index",
-	}, "index")
+	}, "base")
 }
