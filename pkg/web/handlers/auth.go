@@ -42,5 +42,7 @@ func Login(uof *web.Uof) error {
 	// if err := uof.SaveSession(); err != nil {
 	// 	return fiber.ErrInternalServerError
 	// }
+
+	// Add Hx-Redirect to index page
 	return uof.ViewCtx().RedirectToRoute("index", fiber.Map{})
 }
