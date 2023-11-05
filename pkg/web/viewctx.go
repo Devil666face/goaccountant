@@ -46,9 +46,9 @@ func (c ViewCtx) IsHtmxCurrentURL() bool {
 	return false
 }
 
-func (c ViewCtx) SetClientRefresh() {
-	c.Set(HXRefresh, "true")
-}
+// func (c ViewCtx) SetClientRefresh() {
+// 	c.Set(HXRefresh, "true")
+// }
 
 func (c ViewCtx) ClientRedirect(redirectURL string) error {
 	c.Set(HXRedirect, redirectURL)
