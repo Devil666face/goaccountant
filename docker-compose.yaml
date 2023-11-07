@@ -11,3 +11,20 @@ services:
       PGDATA: /data/postgres
     volumes:
       - ./postgres:/data/postgres
+    restart: always
+
+  gotubebot:
+    container_name: goaccountant
+    image: ghcr.io/devil666face/goaccountant:main
+    labels:
+      - "com.centurylinklabs.watchtower.enable=true"
+    environment:
+      APP_NAME: goaccountant
+      POSTGRES: ${POSTGRES}
+      POSTGRES_HOST: ${POSTGRES_HOST}
+    depends_on:
+      - postgres
+    restart: always
+    ports:
+      - "127.0.0.1:8000:8000"
+      - "127.0.0.1:4443:4443"
