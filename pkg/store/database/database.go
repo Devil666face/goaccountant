@@ -4,6 +4,8 @@ import (
 	"log"
 
 	"github.com/Devil666face/goaccountant/pkg/config"
+	"github.com/Devil666face/goaccountant/pkg/utils"
+	"github.com/Devil666face/goaccountant/pkg/web/models"
 
 	"gorm.io/gorm"
 )
@@ -30,6 +32,9 @@ func New(cfg *config.Config, tables []any) *Database {
 	if err := d.migrate(); err != nil {
 		log.Print(err)
 	}
+	if err := d.createSuperuser(); err != nil {
+		log.Print(err)
+	}
 	return &d
 }
 
@@ -46,4 +51,20 @@ func (d *Database) connect() error {
 		return d.NewPsql()
 	}
 	return d.NewSqlite()
+}
+
+func (d *Database) createSuperuser() error {
+	hash, err := utils.GenHash(d.config.SuperuserPassword)
+	if err != nil {
+		return err
+	}
+	u := models.User{
+		Username: d.config.Superuser,
+		Admin:    true,
+		Password: hash,
+	}
+	if err := u.Create(d.db); err != nil {
+		return err
+	}
+	return nil
 }

@@ -46,3 +46,10 @@ func Login(uof *web.Uof) error {
 	// return uof.ViewCtx().RedirectToRoute("index", fiber.Map{})
 	return uof.ViewCtx().ClientRedirect(uof.ViewCtx().URL("index"))
 }
+
+func Logout(uof *web.Uof) error {
+	if err := uof.DestroySession(); err != nil {
+		return ErrInSession
+	}
+	return uof.ViewCtx().RedirectToRoute("login", nil)
+}

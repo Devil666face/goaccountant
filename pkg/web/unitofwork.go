@@ -51,7 +51,7 @@ func (uof *Uof) Config() *config.Config {
 	return uof.config
 }
 
-func (uof *Uof) GetSession() error {
+func (uof *Uof) getSession() error {
 	var err error
 	if uof.ctxsession, err = uof.Store().Get(uof.FiberCtx()); err != nil {
 		return err
@@ -60,7 +60,7 @@ func (uof *Uof) GetSession() error {
 }
 
 func (uof *Uof) SetInSession(key string, val any) error {
-	if err := uof.GetSession(); err != nil {
+	if err := uof.getSession(); err != nil {
 		return err
 	}
 	uof.ctxsession.Set(key, val)
@@ -68,7 +68,7 @@ func (uof *Uof) SetInSession(key string, val any) error {
 }
 
 func (uof *Uof) GetFromSession(key string) (any, error) {
-	if err := uof.GetSession(); err != nil {
+	if err := uof.getSession(); err != nil {
 		return nil, err
 	}
 	return uof.ctxsession.Get(key), nil
@@ -76,4 +76,8 @@ func (uof *Uof) GetFromSession(key string) (any, error) {
 
 func (uof *Uof) SaveSession() error {
 	return uof.ctxsession.Save()
+}
+
+func (uof *Uof) DestroySession() error {
+	return uof.ctxsession.Destroy()
 }
