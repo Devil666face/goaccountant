@@ -3,6 +3,7 @@ APP_NAME=goaccountant
 
 function with_docker {
   rm $PWD/docker-compose.yaml
+  touch .env
 
   # read -p "Create .env file? [y/n] " STATUS
   # if [[ "$STATUS" = "y" ]]; then
