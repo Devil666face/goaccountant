@@ -18,10 +18,13 @@ services:
     image: ghcr.io/devil666face/goaccountant:main
     labels:
       - "com.centurylinklabs.watchtower.enable=true"
+    env_file:
+      - .env
     environment:
       APP_NAME: goaccountant
-      POSTGRES: ${POSTGRES}
-      POSTGRES_HOST: ${POSTGRES_HOST}
+      IP: 0.0.0.0
+      POSTGRES: "true"
+      POSTGRES_HOST: postgres
     depends_on:
       - postgres
     restart: always
