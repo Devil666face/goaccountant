@@ -8,7 +8,7 @@ full_bin = "tmp/main"
 # Watch these filename extensions.
 include_ext = ["go", "html", "css", "js"]
 # Ignore these filename extensions or directories.
-exclude_dir = ["tmp", "vendor", "static", "media"]
+exclude_dir = ["tmp", "vendor", "static", "media", "postgres"]
 # Watch these directories if you specified.
 include_dir = []
 # Exclude files.
@@ -35,4 +35,3 @@ runner = "green"
 
 [misc]
 clean_on_exit = true
-

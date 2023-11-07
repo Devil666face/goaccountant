@@ -81,3 +81,17 @@ func (uof *Uof) SaveSession() error {
 func (uof *Uof) DestroySession() error {
 	return uof.ctxsession.Destroy()
 }
+
+func (uof *Uof) DestroySessionByID(sessID string) error {
+	if sessID == "" {
+		return nil
+	}
+	return uof.Store().Delete(sessID)
+}
+
+func (uof *Uof) SessionID() (string, error) {
+	if err := uof.getSession(); err != nil {
+		return "", err
+	}
+	return uof.ctxsession.ID(), nil
+}

@@ -96,6 +96,13 @@ func UserEdit(uof *web.Uof) error {
 			"Message":   err,
 		})
 	}
+	if err := uof.DestroySessionByID(u.SessionKey); err != nil {
+		return uof.ViewCtx().RenderWithCtx("user_edit", fiber.Map{
+			web.UserKey: u,
+			"Message":   err,
+			// "Message":   ErrInSession,
+		})
+	}
 	return uof.ViewCtx().RenderWithCtx("user_edit", fiber.Map{
 		web.UserKey: u,
 		"Success":   "Successful update user",

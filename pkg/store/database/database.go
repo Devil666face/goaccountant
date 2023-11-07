@@ -10,8 +10,6 @@ import (
 	"gorm.io/gorm"
 )
 
-// var DB *gorm.DB
-
 type Database struct {
 	db            *gorm.DB
 	config        *config.Config
@@ -63,8 +61,5 @@ func (d *Database) createSuperuser() error {
 		Admin:    true,
 		Password: hash,
 	}
-	if err := u.Create(d.db); err != nil {
-		return err
-	}
-	return nil
+	return u.Create(d.db)
 }

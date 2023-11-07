@@ -17,8 +17,9 @@ func LoginPage(uof *web.Uof) error {
 
 func Login(uof *web.Uof) error {
 	var (
-		u  = &models.User{}
-		in = &models.User{}
+		u   = &models.User{}
+		in  = &models.User{}
+		err error
 	)
 	if err := uof.ViewCtx().BodyParser(in); err != nil {
 		return err
@@ -30,20 +31,18 @@ func Login(uof *web.Uof) error {
 			"Message": err.Error(),
 		}, "base")
 	}
-	// if uof.GetSession() != nil {
-	// 	return fiber.ErrInternalServerError
-	// }
 	if err := uof.SetInSession(web.AuthKey, true); err != nil {
 		return ErrInSession
 	}
 	if err := uof.SetInSession(web.UserID, u.ID); err != nil {
 		return ErrInSession
 	}
-	// if err := uof.SaveSession(); err != nil {
-	// 	return fiber.ErrInternalServerError
-	// }
-
-	// return uof.ViewCtx().RedirectToRoute("index", fiber.Map{})
+	if u.SessionKey, err = uof.SessionID(); err != nil {
+		return ErrInSession
+	}
+	if err := u.Update(uof.Database()); err != nil {
+		return ErrInSession
+	}
 	return uof.ViewCtx().ClientRedirect(uof.ViewCtx().URL("index"))
 }
 

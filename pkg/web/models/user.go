@@ -28,6 +28,7 @@ type User struct {
 	Password        string `gorm:"not null" form:"password"`
 	PasswordConfirm string `gorm:"-" form:"password_confirm"`
 	Admin           bool   `gorm:"default:false" form:"admin"`
+	SessionKey      string `gorm:""`
 }
 
 func (u *User) Create(db *gorm.DB) error {
