@@ -2,7 +2,8 @@ package config
 
 import (
 	"fmt"
-	"log"
+	"log/slog"
+	"os"
 
 	"github.com/ilyakaznacheev/cleanenv"
 )
@@ -36,8 +37,9 @@ type Config struct {
 func New() *Config {
 	cfg := Config{}
 	if err := cleanenv.ReadEnv(&cfg); err != nil {
+		slog.Error(fmt.Sprintf("Env variable not found: %s", err))
 		//nolint:revive //If not env's not set - close app
-		log.Fatalln(err)
+		os.Exit(1)
 	}
 	cfg.ConnectHTTP = fmt.Sprintf("%v:%v", cfg.IP, cfg.PortHTTP)
 	cfg.ConnectHTTPS = fmt.Sprintf("%v:%v", cfg.IP, cfg.PortHTTPS)

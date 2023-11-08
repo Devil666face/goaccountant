@@ -1,8 +1,10 @@
 package web
 
 import (
-	"log"
+	"fmt"
+	"log/slog"
 	"net/http"
+	"os"
 
 	"github.com/Devil666face/goaccountant/assets"
 	"github.com/Devil666face/goaccountant/pkg/utils"
@@ -39,8 +41,9 @@ func NewMedia() *Media {
 	path, err := utils.SetPath(assets.DirMedia)
 	if err != nil {
 		path = assets.DirMedia
+		slog.Error(fmt.Sprintf("Media directory not create of found: %s", err))
 		//nolint:revive //If dir for media not created - close app
-		log.Fatalln(err)
+		os.Exit(1)
 	}
 	return &Media{
 		path: path,

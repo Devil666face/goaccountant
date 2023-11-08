@@ -1,7 +1,9 @@
 package web
 
 import (
-	"log"
+	"fmt"
+	"log/slog"
+	"os"
 
 	"github.com/Devil666face/goaccountant/pkg/config"
 	"github.com/Devil666face/goaccountant/pkg/store/database"
@@ -86,7 +88,8 @@ func (a *App) redirectServer() {
 		return c.Redirect(a.config.HTTPSRedirect)
 	})
 	if err := app.Listen(a.config.ConnectHTTP); err != nil {
+		slog.Error(fmt.Sprintf("Start redirect server: %s", err))
 		//nolint:revive //If connection for redirect server already busy - close app
-		log.Fatalln(err)
+		os.Exit(1)
 	}
 }

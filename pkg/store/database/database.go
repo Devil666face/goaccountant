@@ -1,7 +1,9 @@
 package database
 
 import (
-	"log"
+	"fmt"
+	"log/slog"
+	"os"
 
 	"github.com/Devil666face/goaccountant/pkg/config"
 	"github.com/Devil666face/goaccountant/pkg/utils"
@@ -24,14 +26,15 @@ func New(cfg *config.Config, tables []any) *Database {
 		tables: tables,
 	}
 	if err := d.connect(); err != nil {
-		//nolint:revive //If database not open - close app
-		log.Fatalln(err)
+		slog.Error(fmt.Sprintf("Connect database: %s", err))
+		//nolint:revive // If database not connect - exit
+		os.Exit(1)
 	}
 	if err := d.migrate(); err != nil {
-		log.Print(err)
+		slog.Warn(fmt.Sprintf("Migrations not create: %s", err))
 	}
 	if err := d.createSuperuser(); err != nil {
-		log.Print(err)
+		slog.Warn(fmt.Sprintf("Superuser not create: %s", err))
 	}
 	return &d
 }

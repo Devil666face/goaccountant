@@ -1,7 +1,9 @@
 package main
 
 import (
-	"log"
+	"fmt"
+	"log/slog"
+	"os"
 
 	"github.com/Devil666face/goaccountant/internal/web"
 
@@ -11,6 +13,7 @@ import (
 func main() {
 	wa := web.New()
 	if err := wa.Listen(); err != nil {
-		log.Fatalln(err)
+		slog.Error(fmt.Sprintf("Start programm: %s", err))
+		os.Exit(1)
 	}
 }

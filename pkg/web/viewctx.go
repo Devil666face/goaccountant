@@ -1,7 +1,8 @@
 package web
 
 import (
-	"log"
+	"fmt"
+	"log/slog"
 
 	"github.com/gofiber/fiber/v2"
 )
@@ -68,7 +69,7 @@ func (c ViewCtx) URLto(name, key string, val any) string {
 func (c ViewCtx) getRouteURL(name string, fmap fiber.Map) string {
 	url, err := c.GetRouteURL(name, fmap)
 	if err != nil {
-		log.Printf("Url - %s not found", name)
+		slog.Error(fmt.Sprintf("Url %s not found", name))
 	}
 	return url
 }
