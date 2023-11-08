@@ -13,7 +13,7 @@ services:
       - ./postgres:/data/postgres
     restart: always
 
-  gotubebot:
+  goaccountant:
     container_name: goaccountant
     image: ghcr.io/devil666face/goaccountant:main
     labels:
