@@ -7,37 +7,37 @@ import (
 	"github.com/gofiber/fiber/v2"
 )
 
-func Auth(uof *web.Uof) error {
+func Auth(unit *web.Unit) error {
 	var (
 		u   = models.User{}
 		uID any
 		err error
 		ok  bool
 	)
-	if auth, err := uof.GetFromSession(web.AuthKey); auth == nil || err != nil {
-		return uof.ViewCtx().Status(fiber.StatusUnauthorized).
+	if auth, err := unit.GetFromSession(web.AuthKey); auth == nil || err != nil {
+		return unit.ViewCtx().Status(fiber.StatusUnauthorized).
 			RedirectToRoute("login", nil)
 	}
-	if uID, err = uof.GetFromSession(web.UserID); uID == nil || err != nil {
-		return uof.ViewCtx().Status(fiber.StatusUnauthorized).
+	if uID, err = unit.GetFromSession(web.UserID); uID == nil || err != nil {
+		return unit.ViewCtx().Status(fiber.StatusUnauthorized).
 			RedirectToRoute("login", nil)
 	}
 	if u.ID, ok = uID.(uint); !ok {
-		return uof.ViewCtx().Status(fiber.StatusUnauthorized).
+		return unit.ViewCtx().Status(fiber.StatusUnauthorized).
 			RedirectToRoute("login", nil)
 	}
-	if err := u.Get(uof.Database()); err != nil {
-		return uof.ViewCtx().Status(fiber.StatusUnauthorized).
+	if err := u.Get(unit.Database()); err != nil {
+		return unit.ViewCtx().Status(fiber.StatusUnauthorized).
 			RedirectToRoute("login", nil)
 	}
-	uof.ViewCtx().Locals(web.UserKey, u)
-	return uof.ViewCtx().Next()
+	unit.ViewCtx().Locals(web.UserKey, u)
+	return unit.ViewCtx().Next()
 }
 
-func AlreadyLogin(uof *web.Uof) error {
-	auth, err := uof.GetFromSession(web.AuthKey)
+func AlreadyLogin(unit *web.Unit) error {
+	auth, err := unit.GetFromSession(web.AuthKey)
 	if auth, ok := auth.(bool); auth && ok && err == nil {
-		return uof.ViewCtx().RedirectToRoute("index", nil)
+		return unit.ViewCtx().RedirectToRoute("index", nil)
 	}
-	return uof.ViewCtx().Next()
+	return unit.ViewCtx().Next()
 }

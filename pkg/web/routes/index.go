@@ -5,7 +5,7 @@ import (
 	"github.com/Devil666face/goaccountant/pkg/web/middlewares"
 )
 
-func (r *AppRouter) setIndex() {
+func (r *Router) setIndex() {
 	index := r.router.Group("/")
 	index.Use(r.wrapper(middlewares.Auth))
 

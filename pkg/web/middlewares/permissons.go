@@ -8,10 +8,10 @@ import (
 
 var ErrNotPermissions = fiber.ErrNotFound
 
-func Admin(uof *web.Uof) error {
-	if user, ok := uof.ViewCtx().Locals(web.UserKey).(models.User); ok {
+func Admin(unit *web.Unit) error {
+	if user, ok := unit.ViewCtx().Locals(web.UserKey).(models.User); ok {
 		if user.Admin {
-			return uof.ViewCtx().Next()
+			return unit.ViewCtx().Next()
 		}
 	}
 	return ErrNotPermissions

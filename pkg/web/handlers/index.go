@@ -5,9 +5,9 @@ import (
 	"github.com/gofiber/fiber/v2"
 )
 
-func Index(uof *web.Uof) error {
-	// uof.ViewCtx().SetClientRefresh()
-	return uof.ViewCtx().RenderWithCtx("index", fiber.Map{
+func Index(unit *web.Unit) error {
+	// unit.ViewCtx().SetClientRefresh()
+	return unit.ViewCtx().RenderWithCtx("index", fiber.Map{
 		"Title": "Index",
 	}, "base")
 }

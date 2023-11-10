@@ -20,12 +20,6 @@ func (c ViewCtx) RenderWithCtx(name string, bind fiber.Map, layouts ...string) e
 	return c.Render(name, bind, layouts...)
 }
 
-// func (c Ctx) Csrf() template.HTML {
-// 	html := `<input type="hidden" name="csrf" value="%s">`
-// 	//nolint:gosec //Because not revive data from user
-// 	return template.HTML(fmt.Sprintf(html, c.CsrfToken()))
-// }
-
 func (c ViewCtx) CsrfToken() string {
 	if token, ok := c.Locals(Csrf).(string); ok {
 		return token
@@ -39,17 +33,6 @@ func (c ViewCtx) IsHtmx() bool {
 	}
 	return false
 }
-
-func (c ViewCtx) IsHtmxCurrentURL() bool {
-	if url, ok := c.GetReqHeaders()[HxCurrentURL]; ok {
-		return url[0] == c.BaseURL()+c.OriginalURL()
-	}
-	return false
-}
-
-// func (c ViewCtx) SetClientRefresh() {
-// 	c.Set(HXRefresh, "true")
-// }
 
 func (c ViewCtx) ClientRedirect(redirectURL string) error {
 	c.Set(HXRedirect, redirectURL)
@@ -73,3 +56,20 @@ func (c ViewCtx) getRouteURL(name string, fmap fiber.Map) string {
 	}
 	return url
 }
+
+// func (c Ctx) Csrf() template.HTML {
+// 	html := `<input type="hidden" name="csrf" value="%s">`
+// 	//nolint:gosec //Because not revive data from user
+// 	return template.HTML(fmt.Sprintf(html, c.CsrfToken()))
+// }
+
+// func (c ViewCtx) SetClientRefresh() {
+// 	c.Set(HXRefresh, "true")
+// }
+
+// func (c ViewCtx) IsHtmxCurrentURL() bool {
+// 	if url, ok := c.GetReqHeaders()[HxCurrentURL]; ok {
+// 		return url[0] == c.BaseURL()+c.OriginalURL()
+// 	}
+// 	return false
+// }

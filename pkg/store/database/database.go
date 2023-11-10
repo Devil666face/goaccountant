@@ -20,10 +20,10 @@ type Database struct {
 	PsqlConnect   string
 }
 
-func New(cfg *config.Config, tables []any) *Database {
+func New(_config *config.Config, _tables []any) *Database {
 	d := Database{
-		config: cfg,
-		tables: tables,
+		config: _config,
+		tables: _tables,
 	}
 	if err := d.connect(); err != nil {
 		slog.Error(fmt.Sprintf("Connect database: %s", err))

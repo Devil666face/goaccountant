@@ -5,17 +5,17 @@ import (
 	"github.com/gofiber/fiber/v2"
 )
 
-func Htmx(uof *web.Uof) error {
-	uof.ViewCtx().Locals(web.Htmx, false)
-	if _, ok := uof.ViewCtx().GetReqHeaders()[web.HxRequest]; ok {
-		uof.ViewCtx().Locals(web.Htmx, true)
+func Htmx(unit *web.Unit) error {
+	unit.ViewCtx().Locals(web.Htmx, false)
+	if _, ok := unit.ViewCtx().GetReqHeaders()[web.HxRequest]; ok {
+		unit.ViewCtx().Locals(web.Htmx, true)
 	}
-	return uof.ViewCtx().Next()
+	return unit.ViewCtx().Next()
 }
 
-func HxOnly(uof *web.Uof) error {
-	if uof.ViewCtx().IsHtmx() {
-		return uof.ViewCtx().Next()
+func HxOnly(unit *web.Unit) error {
+	if unit.ViewCtx().IsHtmx() {
+		return unit.ViewCtx().Next()
 	}
 	return fiber.ErrBadRequest
 }

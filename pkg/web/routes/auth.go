@@ -5,7 +5,7 @@ import (
 	"github.com/Devil666face/goaccountant/pkg/web/middlewares"
 )
 
-func (r *AppRouter) setAuth() {
+func (r *Router) setAuth() {
 	auth := r.router.Group("/auth")
 
 	auth.Get(

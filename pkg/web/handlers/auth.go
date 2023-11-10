@@ -9,46 +9,46 @@ import (
 
 var ErrInSession = fiber.ErrInternalServerError
 
-func LoginPage(uof *web.Uof) error {
-	return uof.ViewCtx().RenderWithCtx("login", fiber.Map{
+func LoginPage(unit *web.Unit) error {
+	return unit.ViewCtx().RenderWithCtx("login", fiber.Map{
 		"Title": "Login",
 	}, "base")
 }
 
-func Login(uof *web.Uof) error {
+func Login(unit *web.Unit) error {
 	var (
 		u   = &models.User{}
 		in  = &models.User{}
 		err error
 	)
-	if err := uof.ViewCtx().BodyParser(in); err != nil {
+	if err := unit.ViewCtx().BodyParser(in); err != nil {
 		return err
 	}
 	u.Username = in.Username
-	if err := u.LoginValidate(uof.Database(), in.Password); err != nil {
-		return uof.ViewCtx().RenderWithCtx("login", fiber.Map{
+	if err := u.LoginValidate(unit.Database(), in.Password); err != nil {
+		return unit.ViewCtx().RenderWithCtx("login", fiber.Map{
 			"Title":   "Login",
 			"Message": err.Error(),
 		}, "base")
 	}
-	if err := uof.SetInSession(web.AuthKey, true); err != nil {
+	if err := unit.SetInSession(web.AuthKey, true); err != nil {
 		return ErrInSession
 	}
-	if err := uof.SetInSession(web.UserID, u.ID); err != nil {
+	if err := unit.SetInSession(web.UserID, u.ID); err != nil {
 		return ErrInSession
 	}
-	if u.SessionKey, err = uof.SessionID(); err != nil {
+	if u.SessionKey, err = unit.SessionID(); err != nil {
 		return ErrInSession
 	}
-	if err := u.Update(uof.Database()); err != nil {
+	if err := u.Update(unit.Database()); err != nil {
 		return ErrInSession
 	}
-	return uof.ViewCtx().ClientRedirect(uof.ViewCtx().URL("index"))
+	return unit.ViewCtx().ClientRedirect(unit.ViewCtx().URL("index"))
 }
 
-func Logout(uof *web.Uof) error {
-	if err := uof.DestroySession(); err != nil {
+func Logout(unit *web.Unit) error {
+	if err := unit.DestroySession(); err != nil {
 		return ErrInSession
 	}
-	return uof.ViewCtx().RedirectToRoute("login", nil)
+	return unit.ViewCtx().RedirectToRoute("login", nil)
 }

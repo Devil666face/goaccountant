@@ -22,11 +22,11 @@ type Store struct {
 	psqlConnect   string
 }
 
-func New(cfg *config.Config, db *database.Database) *Store {
+func New(_config *config.Config, _database *database.Database) *Store {
 	s := Store{
-		config:        cfg,
-		sqliteConnect: db.SqliteConnect,
-		psqlConnect:   db.PsqlConnect,
+		config:        _config,
+		sqliteConnect: _database.SqliteConnect,
+		psqlConnect:   _database.PsqlConnect,
 	}
 	s.storage = s.newStorage()
 	s.store = s.newStore()

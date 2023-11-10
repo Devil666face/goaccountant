@@ -22,7 +22,7 @@ type App struct {
 	media    *Media
 	config   *config.Config
 	database *database.Database
-	router   *routes.AppRouter
+	router   *routes.Router
 	session  *session.Store
 	tables   []any
 }

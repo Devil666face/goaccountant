@@ -9,10 +9,10 @@ import (
 	"github.com/gofiber/fiber/v2/utils"
 )
 
-func Csrf(uof *web.Uof) error {
+func Csrf(unit *web.Unit) error {
 	// Optional. Default: "header:X-CSRF-Token"
 	return csrf.New(csrf.Config{
-		Storage: uof.Storage(),
+		Storage: unit.Storage(),
 		// KeyLookup:  "form:csrf",
 		CookieName: "csrf",
 		// CookieName:     "csrf_",
@@ -22,5 +22,5 @@ func Csrf(uof *web.Uof) error {
 		ContextKey:     web.Csrf,
 		CookieHTTPOnly: true,
 		SingleUseToken: true,
-	})(uof.FiberCtx())
+	})(unit.Ctx())
 }

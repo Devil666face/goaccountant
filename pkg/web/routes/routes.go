@@ -15,21 +15,21 @@ var (
 	MediaPrefix  = "/media"
 )
 
-type AppRouter struct {
+type Router struct {
 	router      fiber.Router
 	config      *config.Config
 	database    *database.Database
 	session     *session.Store
-	middlewares []func(*web.Uof) error
+	middlewares []func(*web.Unit) error
 }
 
-func New(router fiber.Router, cfg *config.Config, db *database.Database, s *session.Store) *AppRouter {
-	r := AppRouter{
-		router:   router,
-		config:   cfg,
-		database: db,
-		session:  s,
-		middlewares: []func(*web.Uof) error{
+func New(_router fiber.Router, _config *config.Config, _database *database.Database, _session *session.Store) *Router {
+	r := Router{
+		router:   _router,
+		config:   _config,
+		database: _database,
+		session:  _session,
+		middlewares: []func(*web.Unit) error{
 			middlewares.AllowHost,
 			middlewares.Csrf,
 			middlewares.Htmx,
@@ -42,14 +42,14 @@ func New(router fiber.Router, cfg *config.Config, db *database.Database, s *sess
 	return &r
 }
 
-func (r *AppRouter) wrapper(handler func(*web.Uof) error) func(c *fiber.Ctx) error {
+func (r *Router) wrapper(handler func(*web.Unit) error) func(c *fiber.Ctx) error {
 	return func(c *fiber.Ctx) error {
-		uof := web.NewUof(c, r.database, r.config, r.session)
-		return handler(uof)
+		unit := web.NewUnit(c, r.database, r.config, r.session)
+		return handler(unit)
 	}
 }
 
-func (r *AppRouter) setMiddlewares() {
+func (r *Router) setMiddlewares() {
 	for _, middleware := range r.middlewares {
 		r.router.Use(r.wrapper(middleware))
 	}
