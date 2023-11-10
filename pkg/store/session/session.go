@@ -28,11 +28,8 @@ func New(cfg *config.Config, db *database.Database) *Store {
 		sqliteConnect: db.SqliteConnect,
 		psqlConnect:   db.PsqlConnect,
 	}
-	if s.config.PostgresUse {
-		s.storage = s.NewPsqlStorage()
-	}
-	s.storage = s.NewSqliteStorage()
-	s.store = s.getStore()
+	s.storage = s.newStorage()
+	s.store = s.newStore()
 	return &s
 }
 
@@ -44,7 +41,14 @@ func (s *Store) Storage() fiber.Storage {
 	return s.storage
 }
 
-func (s *Store) getStore() *session.Store {
+func (s *Store) newStorage() fiber.Storage {
+	if s.config.PostgresUse {
+		return s.NewPsqlStorage()
+	}
+	return s.NewSqliteStorage()
+}
+
+func (s *Store) newStore() *session.Store {
 	return session.New(session.Config{
 		// CookieSecure: true,
 		CookieHTTPOnly: true,
