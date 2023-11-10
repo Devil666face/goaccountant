@@ -11,7 +11,7 @@ APP := $(notdir $(patsubst %/,%,$(dir $(abspath $(lastword $(MAKEFILE_LIST))))))
 .PHONY: build run .install-air air .install-linter lint cert .install-formatter fmt help compose
 
 release: ## Build release
-	CGO_ENABLED=$(CGO_ENABLED) GOOS=$(GOOS) GOARCH=$(GOARCH) go build -ldflags=$(LDFLAGS) -o $(PROJECT_BIN)/$(APP) cmd/main/main.go
+	CGO_ENABLED=0 GOOS=$(GOOS) GOARCH=$(GOARCH) go build -ldflags=$(LDFLAGS) -o $(PROJECT_BIN)/$(APP) cmd/main/main.go
 
 debug: ## Build debug and run
 	CGO_ENABLED=$(CGO_ENABLED) GOOS=$(GOOS) GOARCH=$(GOARCH) go build --gcflags="all=-N -l" -v -o $(PROJECT_BIN)/$(APP)_debug cmd/main/main.go
