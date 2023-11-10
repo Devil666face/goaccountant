@@ -126,6 +126,9 @@ func UserDelete(unit *web.Unit) error {
 	if err := u.Delete(unit.Database()); err != nil {
 		return err
 	}
+	if err := unit.DestroySessionByID(u.SessionKey); err != nil {
+		return ErrInSession
+	}
 	return unit.ViewCtx().RenderWithCtx("user_content", fiber.Map{
 		"Users": models.GetAllUsers(unit.Database()),
 	})
