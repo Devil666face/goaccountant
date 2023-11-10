@@ -36,7 +36,8 @@ type Config struct {
 
 func New() *Config {
 	cfg := Config{}
-	if err := cleanenv.ReadEnv(&cfg); err != nil {
+	// if err := cleanenv.ReadEnv(&cfg); err != nil {
+	if err := cleanenv.ReadConfig(".env", &cfg); err != nil {
 		slog.Error(fmt.Sprintf("Env variable not found: %s", err))
 		//nolint:revive //If not env's not set - close app
 		os.Exit(1)

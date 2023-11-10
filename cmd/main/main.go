@@ -6,8 +6,7 @@ import (
 	"os"
 
 	"github.com/Devil666face/goaccountant/internal/web"
-
-	_ "github.com/joho/godotenv/autoload"
+	// _ "github.com/joho/godotenv/autoload"
 )
 
 func main() {
