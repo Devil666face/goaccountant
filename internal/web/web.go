@@ -16,15 +16,15 @@ import (
 )
 
 type App struct {
-	app      *fiber.App
-	logger   func(*fiber.Ctx) error
-	static   func(*fiber.Ctx) error
-	media    *Media
-	config   *config.Config
-	database *database.Database
-	router   *routes.Router
-	session  *session.Store
-	tables   []any
+	app            *fiber.App
+	defmiddlewares []func(*fiber.Ctx) error
+	static         func(*fiber.Ctx) error
+	media          *Media
+	config         *config.Config
+	database       *database.Database
+	router         *routes.Router
+	session        *session.Store
+	tables         []any
 }
 
 func New() *App {
@@ -37,7 +37,10 @@ func New() *App {
 				// ViewsLayout:  "base",
 			},
 		),
-		logger: NewLogger(),
+		defmiddlewares: []func(*fiber.Ctx) error{
+			NewLogger(),
+			NewRecover(),
+		},
 		static: NewStatic(),
 		media:  NewMedia(),
 		config: config.New(),
@@ -45,8 +48,9 @@ func New() *App {
 			&models.User{},
 		},
 	}
+	a.setDefaultMiddlewares()
 	a.setStores()
-	a.setStatics()
+	a.setStatic()
 	a.setRoutes()
 	return a
 }
@@ -56,14 +60,19 @@ func (a *App) setStores() {
 	a.session = session.New(a.config, a.database)
 }
 
-func (a *App) setStatics() {
+func (a *App) setStatic() {
 	a.app.Use(routes.StaticPrefix, a.static)
 	a.app.Static(routes.MediaPrefix, a.media.path, a.media.handler)
 }
 
 func (a *App) setRoutes() {
-	a.app.Use(a.logger)
 	a.router = routes.New(a.app, a.config, a.database, a.session)
+}
+
+func (a *App) setDefaultMiddlewares() {
+	for _, m := range a.defmiddlewares {
+		a.app.Use(m)
+	}
 }
 
 func (a *App) Listen() error {
