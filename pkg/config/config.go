@@ -29,6 +29,7 @@ type Config struct {
 	PostgresPassword  string `env:"POSTGRES_PASSWORD" env-default:"Qwerty123!"`
 	Superuser         string `env:"SUPERUSER" env-default:"superuser"`
 	SuperuserPassword string `env:"SUPERUSER_PASSWORD" env-default:"Qwerty123!"`
+	MaxQueryPerMinute int    `env:"MAX_QUERY_PER_MINUTE" env-default:"50"`
 	ConnectHTTP       string
 	ConnectHTTPS      string
 	HTTPSRedirect     string

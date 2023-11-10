@@ -30,6 +30,7 @@ func New(_router fiber.Router, _config *config.Config, _database *database.Datab
 		database: _database,
 		session:  _session,
 		middlewares: []func(*web.Unit) error{
+			middlewares.Limiter,
 			middlewares.AllowHost,
 			middlewares.Csrf,
 			middlewares.Htmx,
