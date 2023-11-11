@@ -43,7 +43,7 @@ var userValidateMap = map[string]validatorFunc{
 	},
 }
 
-func (v *Validator) SwitchUserValidateTest(user any) error {
+func (v *Validator) SwitchUserValidate(user any) error {
 	if err := v.validate.Struct(user); err != nil {
 		if err, ok := err.(validator.ValidationErrors); ok { //nolint:errorlint // This example from official doc
 			for _, e := range err {

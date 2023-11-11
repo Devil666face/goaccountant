@@ -43,12 +43,9 @@ func (u *User) Validate(v *validators.Validator) error {
 	if !v.ValidateInputs(u.Email, u.Password, u.PasswordConfirm) {
 		return fiber.ErrInternalServerError
 	}
-	if err := v.SwitchUserValidateTest(u); err != nil {
+	if err := v.SwitchUserValidate(u); err != nil {
 		return err
 	}
-	// if err := v.Validate().Struct(u); err != nil {
-	// 	return v.SwitchUserValidate(err)
-	// }
 	// Hash password and do u.Password = password
 	if u.hashPassword() != nil {
 		return ErrPasswordEncrypt

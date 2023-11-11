@@ -14,7 +14,7 @@ var (
 )
 
 func (u *User) LoginValidate(db *gorm.DB, v *validators.Validator, password string) error {
-	if !v.ValidateInputs(u.Email, u.Password, u.PasswordConfirm) {
+	if !v.ValidateInputs(u.Email, password) {
 		return fiber.ErrInternalServerError
 	}
 	if !u.IsFound(db) {

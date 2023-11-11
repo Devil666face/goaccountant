@@ -9,7 +9,7 @@ const (
 	required = "required"
 )
 
-type validatorFunc = func(e validator.FieldError) error
+type validatorFunc func(e validator.FieldError) error
 
 type Validator struct {
 	validate *validator.Validate
