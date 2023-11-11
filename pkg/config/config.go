@@ -30,9 +30,11 @@ type Config struct {
 	Superuser         string `env:"SUPERUSER" env-default:"superuser"`
 	SuperuserPassword string `env:"SUPERUSER_PASSWORD" env-default:"Qwerty123!"`
 	MaxQueryPerMinute int    `env:"MAX_QUERY_PER_MINUTE" env-default:"50"`
-	ConnectHTTP       string
-	ConnectHTTPS      string
-	HTTPSRedirect     string
+	CookieKey         string `env:"COOKIE_KEY" env-default:"VtsTmAz5I7LUM3N2NA4J7eX1XC/gNzA8DUK1Ocssowo="`
+	// Use `openssl rand -base64 32` for get CookieKey
+	ConnectHTTP   string
+	ConnectHTTPS  string
+	HTTPSRedirect string
 }
 
 func New() *Config {

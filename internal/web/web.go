@@ -16,15 +16,14 @@ import (
 )
 
 type App struct {
-	app         *fiber.App
-	static      func(*fiber.Ctx) error
-	media       *Media
-	config      *config.Config
-	database    *database.Database
-	router      *routes.Router
-	session     *session.Store
-	tables      []any
-	middlewares []func(*fiber.Ctx) error
+	app      *fiber.App
+	static   func(*fiber.Ctx) error
+	media    *Media
+	config   *config.Config
+	database *database.Database
+	router   *routes.Router
+	session  *session.Store
+	tables   []any
 }
 
 func New() *App {
@@ -43,15 +42,7 @@ func New() *App {
 		tables: []any{
 			&models.User{},
 		},
-		middlewares: []func(*fiber.Ctx) error{
-			NewLogger(),
-			NewRecover(),
-			NewHelmet(),
-			NewCompress(),
-			NewEncryptCookie(),
-		},
 	}
-	a.setDefaultMiddlewares()
 	a.setStores()
 	a.setStatic()
 	a.setRoutes()
@@ -70,12 +61,6 @@ func (a *App) setStatic() {
 
 func (a *App) setRoutes() {
 	a.router = routes.New(a.app, a.config, a.database, a.session)
-}
-
-func (a *App) setDefaultMiddlewares() {
-	for _, m := range a.middlewares {
-		a.app.Use(m)
-	}
 }
 
 func (a *App) Listen() error {

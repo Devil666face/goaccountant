@@ -30,8 +30,13 @@ func New(_router fiber.Router, _config *config.Config, _database *database.Datab
 		database: _database,
 		session:  _session,
 		middlewares: []func(*web.Unit) error{
+			middlewares.Logger,
+			middlewares.Recover,
+			middlewares.Compress,
 			middlewares.Limiter,
 			middlewares.AllowHost,
+			middlewares.SecureHeaders,
+			middlewares.EncryptCookie,
 			middlewares.Csrf,
 			middlewares.Htmx,
 		},
@@ -45,8 +50,7 @@ func New(_router fiber.Router, _config *config.Config, _database *database.Datab
 
 func (r *Router) wrapper(handler func(*web.Unit) error) func(c *fiber.Ctx) error {
 	return func(c *fiber.Ctx) error {
-		unit := web.NewUnit(c, r.database, r.config, r.session)
-		return handler(unit)
+		return handler(web.NewUnit(c, r.database, r.config, r.session))
 	}
 }
 
