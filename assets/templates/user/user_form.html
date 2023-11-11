@@ -2,8 +2,8 @@
 {{ template "csrf" . }}
 <div class="modal-body">
   {{ template "alert" . }}
-  <label>Username ➡:</label>
-  <input name="username" required placeholder="Username" type="text" value="{{ .User.Username }}" autofocus
+  <label>Email ➡:</label>
+  <input name="email" required placeholder="Email" type="email" value="{{ .User.Email }}" autofocus
     class="form-control" />
   <br />
   <label>Password 🔒:</label>

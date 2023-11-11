@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"strconv"
 
+	"github.com/Devil666face/goaccountant/pkg/utils"
 	"github.com/Devil666face/goaccountant/pkg/web"
 	"github.com/Devil666face/goaccountant/pkg/web/models"
 
@@ -60,7 +61,7 @@ func UserCreate(unit *web.Unit) error {
 		})
 	}
 	return unit.ViewCtx().RenderWithCtx("user_create", fiber.Map{
-		"Success": fmt.Sprintf("User %s - created", u.Username),
+		"Success": fmt.Sprintf("User %s - created", u.Email),
 	})
 }
 
@@ -82,15 +83,16 @@ func UserEdit(unit *web.Unit) error {
 		return fiber.ErrNotFound
 	}
 	if err := in.Validate(); err != nil {
-		if errors.Is(err, models.ErrPasswordRequired) {
+		if errors.Is(err, utils.ErrPasswordRequired) {
 			in.Password, in.PasswordConfirm = u.Password, u.Password
 		} else {
 			return unit.ViewCtx().RenderWithCtx("user_edit", fiber.Map{
 				web.UserKey: u,
+				"Message":   err,
 			})
 		}
 	}
-	u.Username, u.Admin, u.Password = in.Username, in.Admin, in.Password
+	u.Email, u.Admin, u.Password = in.Email, in.Admin, in.Password
 	if err := u.Update(unit.Database()); err != nil {
 		return unit.ViewCtx().RenderWithCtx("user_edit", fiber.Map{
 			web.UserKey: u,

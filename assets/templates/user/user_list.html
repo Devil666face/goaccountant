@@ -26,16 +26,16 @@
   {{ range .Users }}
   <div class="row mb-2" id="user_{{ .ID }}">
     <div class="col">{{ .ID }}</div>
-    <div class="col">{{ .Username }}</div>
+    <div class="col">{{ .Email }}</div>
     <div class="col">{{ if .Admin }}✅{{ else }}❌{{ end }}</div>
     <div class="col">
       <button type="button" class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#edit_user"
-        hx-put='{{ $c.URLto "user_edit" "id" .ID }}' hx-swap="innerHTML" hx-target="#edit_user_content">
+        hx-get='{{ $c.URLto "user_edit" "id" .ID }}' hx-swap="innerHTML" hx-target="#edit_user_content">
         Edit 📝
       </button>
     </div>
     <div class="col">
-      <button type="button" class="btn btn-outline-danger" hx-confirm="🗑 Delete user - {{ .Username }}?"
+      <button type="button" class="btn btn-outline-danger" hx-confirm="🗑 Delete user - {{ .Email }}?"
         hx-swap="innerHTML" hx-delete='{{ $c.URLto "user_delete" "id" .ID }}' hx-target="#users">
         Delete 🗑
       </button>

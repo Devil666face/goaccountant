@@ -60,7 +60,7 @@ func (d *Database) createSuperuser() error {
 		return err
 	}
 	u := models.User{
-		Username: d.config.Superuser,
+		Email:    d.config.Superuser,
 		Admin:    true,
 		Password: hash,
 	}

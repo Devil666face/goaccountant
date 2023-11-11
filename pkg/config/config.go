@@ -27,7 +27,7 @@ type Config struct {
 	PostgresDB        string `env:"POSTGRES_DB" env-default:"db"`
 	PostgresUser      string `env:"POSTGRES_USER" env-default:"superuser"`
 	PostgresPassword  string `env:"POSTGRES_PASSWORD" env-default:"Qwerty123!"`
-	Superuser         string `env:"SUPERUSER" env-default:"superuser"`
+	Superuser         string `env:"SUPERUSER" env-default:"superuser@local.lan"`
 	SuperuserPassword string `env:"SUPERUSER_PASSWORD" env-default:"Qwerty123!"`
 	MaxQueryPerMinute int    `env:"MAX_QUERY_PER_MINUTE" env-default:"50"`
 	CookieKey         string `env:"COOKIE_KEY" env-default:"VtsTmAz5I7LUM3N2NA4J7eX1XC/gNzA8DUK1Ocssowo="`

@@ -2,32 +2,23 @@ package models
 
 import (
 	"errors"
-	"fmt"
 
 	"github.com/Devil666face/goaccountant/pkg/utils"
 	"github.com/gofiber/fiber/v2"
 	"gorm.io/gorm"
 )
 
-const (
-	PasswordLen = 8
-)
-
 var (
-	ErrEmptyUsername     = fiber.NewError(fiber.StatusBadRequest, "Username is required")
-	ErrPasswordMissmatch = fiber.NewError(fiber.StatusBadRequest, "Passwords mismatch")
-	ErrPasswordRequired  = fiber.NewError(fiber.StatusBadRequest, "Password is required")
-	ErrPasswordShort     = fiber.NewError(fiber.StatusBadRequest, fmt.Sprintf("The minimum len of password is %d", PasswordLen))
-	ErrPasswordEncrypt   = fiber.ErrInternalServerError
-	ErrUserNotUniq       = fiber.NewError(fiber.StatusBadRequest, "User already create")
+	ErrPasswordEncrypt = fiber.ErrInternalServerError
+	ErrUserNotUniq     = fiber.NewError(fiber.StatusBadRequest, "User already create")
 )
 
 type User struct {
 	gorm.Model
-	Username        string `gorm:"unique;not null" form:"username"`
-	Password        string `gorm:"not null" form:"password"`
-	PasswordConfirm string `gorm:"-" form:"password_confirm"`
-	Admin           bool   `gorm:"default:false" form:"admin"`
+	Email           string `gorm:"unique;not null" form:"email" validate:"required,email"`
+	Password        string `gorm:"not null" form:"password" validate:"required,min=8"`
+	PasswordConfirm string `gorm:"-" form:"password_confirm" validate:"required,eqfield=Password"`
+	Admin           bool   `gorm:"default:false" form:"admin" validate:"boolean"`
 	SessionKey      string `gorm:""`
 }
 
@@ -36,14 +27,7 @@ func (u *User) Create(db *gorm.DB) error {
 	if u.IsFound(db) {
 		return ErrUserNotUniq
 	}
-	// if err := u.GetUser(db, u.Username); !errors.Is(err, gorm.ErrRecordNotFound) {
-	// 	return ErrUserNotUniq
-	// }
 	return db.Create(u).Error
-	// if err := db.Create(u); err.Error != nil {
-	// 	return err.Error
-	// }
-	// return nil
 }
 
 func (u *User) Update(db *gorm.DB) error {
@@ -51,28 +35,19 @@ func (u *User) Update(db *gorm.DB) error {
 }
 
 func (u *User) IsFound(db *gorm.DB) bool {
-	return !errors.Is(u.GetByUsername(db, u.Username), gorm.ErrRecordNotFound)
+	return !errors.Is(u.GetByUsername(db, u.Email), gorm.ErrRecordNotFound)
 }
 
 func (u *User) validateInput() bool {
-	return utils.ValidateUserInputs(u.Username, u.Password, u.PasswordConfirm)
+	return utils.ValidateInputs(u.Email, u.Password, u.PasswordConfirm)
 }
 
 func (u *User) Validate() error {
 	if !u.validateInput() {
 		return fiber.ErrInternalServerError
 	}
-	if u.Username == "" {
-		return ErrEmptyUsername
-	}
-	if u.Password != u.PasswordConfirm {
-		return ErrPasswordMissmatch
-	}
-	if u.Password == "" || u.PasswordConfirm == "" {
-		return ErrPasswordRequired
-	}
-	if len([]rune(u.Password)) < PasswordLen {
-		return ErrPasswordShort
+	if err := utils.Validate.Struct(u); err != nil {
+		return utils.SwitchUserValidateError(err)
 	}
 	// Hash password and do u.Password = password
 	if u.hashPassword() != nil {
@@ -113,8 +88,8 @@ func (u *User) Delete(db *gorm.DB) error {
 
 func (u *User) GetByUsername(db *gorm.DB, username string) error {
 	u.ID = 0
-	return db.Where("username = ?", username).First(&u).Error
-	// return db.Where("username = ?", username).Take(&u).Error
+	return db.Where("email = ?", username).First(&u).Error
+	// return db.Where("email = ?", username).Take(&u).Error
 }
 
 // func (user *User) Set(username string, password string, admin bool) {

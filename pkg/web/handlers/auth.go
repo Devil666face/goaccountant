@@ -24,7 +24,7 @@ func Login(unit *web.Unit) error {
 	if err := unit.ViewCtx().BodyParser(in); err != nil {
 		return err
 	}
-	u.Username = in.Username
+	u.Email = in.Email
 	if err := u.LoginValidate(unit.Database(), in.Password); err != nil {
 		return unit.ViewCtx().RenderWithCtx("login", fiber.Map{
 			"Title":   "Login",
