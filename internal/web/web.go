@@ -11,19 +11,21 @@ import (
 	"github.com/Devil666face/goaccountant/pkg/web/handlers"
 	"github.com/Devil666face/goaccountant/pkg/web/models"
 	"github.com/Devil666face/goaccountant/pkg/web/routes"
+	"github.com/Devil666face/goaccountant/pkg/web/validators"
 
 	"github.com/gofiber/fiber/v2"
 )
 
 type App struct {
-	app      *fiber.App
-	static   func(*fiber.Ctx) error
-	media    *Media
-	config   *config.Config
-	database *database.Database
-	router   *routes.Router
-	session  *session.Store
-	tables   []any
+	app       *fiber.App
+	static    func(*fiber.Ctx) error
+	media     *Media
+	config    *config.Config
+	database  *database.Database
+	router    *routes.Router
+	session   *session.Store
+	validator *validators.Validator
+	tables    []any
 }
 
 func New() *App {
@@ -36,9 +38,10 @@ func New() *App {
 				// ViewsLayout:  "base",
 			},
 		),
-		static: NewStatic(),
-		media:  NewMedia(),
-		config: config.New(),
+		static:    NewStatic(),
+		media:     NewMedia(),
+		config:    config.New(),
+		validator: validators.New(),
 		tables: []any{
 			&models.User{},
 		},
@@ -60,7 +63,7 @@ func (a *App) setStatic() {
 }
 
 func (a *App) setRoutes() {
-	a.router = routes.New(a.app, a.config, a.database, a.session)
+	a.router = routes.New(a.app, a.config, a.database, a.session, a.validator)
 }
 
 func (a *App) Listen() error {

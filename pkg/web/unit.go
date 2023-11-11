@@ -4,6 +4,7 @@ import (
 	"github.com/Devil666face/goaccountant/pkg/config"
 	"github.com/Devil666face/goaccountant/pkg/store/database"
 	"github.com/Devil666face/goaccountant/pkg/store/session"
+	"github.com/Devil666face/goaccountant/pkg/web/validators"
 
 	"github.com/gofiber/fiber/v2"
 	fibersession "github.com/gofiber/fiber/v2/middleware/session"
@@ -15,15 +16,23 @@ type Unit struct {
 	database   *database.Database
 	config     *config.Config
 	session    *session.Store
+	validator  *validators.Validator
 	ctxsession *fibersession.Session
 }
 
-func NewUnit(c *fiber.Ctx, _database *database.Database, _config *config.Config, _session *session.Store) *Unit {
+func NewUnit(
+	c *fiber.Ctx,
+	_database *database.Database,
+	_config *config.Config,
+	_session *session.Store,
+	_validator *validators.Validator,
+) *Unit {
 	return &Unit{
-		viewctx:  NewViewCtx(c),
-		database: _database,
-		config:   _config,
-		session:  _session,
+		viewctx:   NewViewCtx(c),
+		database:  _database,
+		config:    _config,
+		session:   _session,
+		validator: _validator,
 	}
 }
 
@@ -49,6 +58,10 @@ func (unit *Unit) Storage() fiber.Storage {
 
 func (unit *Unit) Config() *config.Config {
 	return unit.config
+}
+
+func (unit *Unit) Validator() *validators.Validator {
+	return unit.validator
 }
 
 func (unit *Unit) getSession() error {

@@ -5,9 +5,9 @@ import (
 	"fmt"
 	"strconv"
 
-	"github.com/Devil666face/goaccountant/pkg/utils"
 	"github.com/Devil666face/goaccountant/pkg/web"
 	"github.com/Devil666face/goaccountant/pkg/web/models"
+	"github.com/Devil666face/goaccountant/pkg/web/validators"
 
 	"github.com/gofiber/fiber/v2"
 )
@@ -50,7 +50,7 @@ func UserCreate(unit *web.Unit) error {
 	if err := unit.ViewCtx().BodyParser(&u); err != nil {
 		return fiber.ErrBadRequest
 	}
-	if err := u.Validate(); err != nil {
+	if err := u.Validate(unit.Validator()); err != nil {
 		return unit.ViewCtx().RenderWithCtx("user_create", fiber.Map{
 			"Message": err.Error(),
 		})
@@ -82,8 +82,8 @@ func UserEdit(unit *web.Unit) error {
 	if err := u.Get(unit.Database()); err != nil {
 		return fiber.ErrNotFound
 	}
-	if err := in.Validate(); err != nil {
-		if errors.Is(err, utils.ErrPasswordRequired) {
+	if err := in.Validate(unit.Validator()); err != nil {
+		if errors.Is(err, validators.ErrPasswordRequired) {
 			in.Password, in.PasswordConfirm = u.Password, u.Password
 		} else {
 			return unit.ViewCtx().RenderWithCtx("user_edit", fiber.Map{

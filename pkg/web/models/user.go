@@ -4,6 +4,7 @@ import (
 	"errors"
 
 	"github.com/Devil666face/goaccountant/pkg/utils"
+	"github.com/Devil666face/goaccountant/pkg/web/validators"
 	"github.com/gofiber/fiber/v2"
 	"gorm.io/gorm"
 )
@@ -38,17 +39,16 @@ func (u *User) IsFound(db *gorm.DB) bool {
 	return !errors.Is(u.GetByUsername(db, u.Email), gorm.ErrRecordNotFound)
 }
 
-func (u *User) validateInput() bool {
-	return utils.ValidateInputs(u.Email, u.Password, u.PasswordConfirm)
-}
-
-func (u *User) Validate() error {
-	if !u.validateInput() {
+func (u *User) Validate(v *validators.Validator) error {
+	if !v.ValidateInputs(u.Email, u.Password, u.PasswordConfirm) {
 		return fiber.ErrInternalServerError
 	}
-	if err := utils.Validate.Struct(u); err != nil {
-		return utils.SwitchUserValidateError(err)
+	if err := v.SwitchUserValidateTest(u); err != nil {
+		return err
 	}
+	// if err := v.Validate().Struct(u); err != nil {
+	// 	return v.SwitchUserValidate(err)
+	// }
 	// Hash password and do u.Password = password
 	if u.hashPassword() != nil {
 		return ErrPasswordEncrypt

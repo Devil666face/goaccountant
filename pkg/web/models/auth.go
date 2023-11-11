@@ -1,6 +1,7 @@
 package models
 
 import (
+	"github.com/Devil666face/goaccountant/pkg/web/validators"
 	"github.com/gofiber/fiber/v2"
 	"gorm.io/gorm"
 )
@@ -12,8 +13,8 @@ var (
 	ErrWrongPassword = fiber.NewError(fiber.StatusForbidden, WrongLoginData)
 )
 
-func (u *User) LoginValidate(db *gorm.DB, password string) error {
-	if !u.validateInput() {
+func (u *User) LoginValidate(db *gorm.DB, v *validators.Validator, password string) error {
+	if !v.ValidateInputs(u.Email, u.Password, u.PasswordConfirm) {
 		return fiber.ErrInternalServerError
 	}
 	if !u.IsFound(db) {

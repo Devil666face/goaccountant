@@ -6,6 +6,7 @@ import (
 	"github.com/Devil666face/goaccountant/pkg/store/session"
 	"github.com/Devil666face/goaccountant/pkg/web"
 	"github.com/Devil666face/goaccountant/pkg/web/middlewares"
+	"github.com/Devil666face/goaccountant/pkg/web/validators"
 
 	"github.com/gofiber/fiber/v2"
 )
@@ -20,15 +21,23 @@ type Router struct {
 	config      *config.Config
 	database    *database.Database
 	session     *session.Store
+	validator   *validators.Validator
 	middlewares []func(*web.Unit) error
 }
 
-func New(_router fiber.Router, _config *config.Config, _database *database.Database, _session *session.Store) *Router {
+func New(
+	_router fiber.Router,
+	_config *config.Config,
+	_database *database.Database,
+	_session *session.Store,
+	_validator *validators.Validator,
+) *Router {
 	r := Router{
-		router:   _router,
-		config:   _config,
-		database: _database,
-		session:  _session,
+		router:    _router,
+		config:    _config,
+		database:  _database,
+		session:   _session,
+		validator: _validator,
 		middlewares: []func(*web.Unit) error{
 			middlewares.Logger,
 			middlewares.Recover,
@@ -50,7 +59,7 @@ func New(_router fiber.Router, _config *config.Config, _database *database.Datab
 
 func (r *Router) wrapper(handler func(*web.Unit) error) func(c *fiber.Ctx) error {
 	return func(c *fiber.Ctx) error {
-		return handler(web.NewUnit(c, r.database, r.config, r.session))
+		return handler(web.NewUnit(c, r.database, r.config, r.session, r.validator))
 	}
 }
 

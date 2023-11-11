@@ -25,7 +25,7 @@ func Login(unit *web.Unit) error {
 		return err
 	}
 	u.Email = in.Email
-	if err := u.LoginValidate(unit.Database(), in.Password); err != nil {
+	if err := u.LoginValidate(unit.Database(), unit.Validator(), in.Password); err != nil {
 		return unit.ViewCtx().RenderWithCtx("login", fiber.Map{
 			"Title":   "Login",
 			"Message": err.Error(),
