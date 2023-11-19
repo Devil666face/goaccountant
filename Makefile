@@ -14,6 +14,8 @@ APP := $(notdir $(patsubst %/,%,$(dir $(abspath $(lastword $(MAKEFILE_LIST))))))
 		air \
 		.install-linter \
 		lint \
+		.install-nil \
+		nil-check \
 		cert \
 		.install-formatter \
 		fmt \
@@ -38,6 +40,12 @@ dev: .install-air ## Run dev server
 
 lint: .install-linter ## Run linter
 	golangci-lint run ./...
+
+.install-nil: ## Install nil check
+	[ -f $(PROJECT_BIN)/nilaway ] || go install go.uber.org/nilaway/cmd/nilaway@latest && cp $(GOPATH)/bin/nilaway $(PROJECT_BIN)
+
+nil-check: .install-nil ## Run nil check linter
+	nilaway ./...
 
 cert: ## Make ssl cert's
 	openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout server.key -out server.crt
