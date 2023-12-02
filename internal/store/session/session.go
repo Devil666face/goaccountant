@@ -3,8 +3,8 @@ package session
 import (
 	"time"
 
-	"github.com/Devil666face/goaccountant/pkg/config"
-	"github.com/Devil666face/goaccountant/pkg/store/database"
+	"github.com/Devil666face/goaccountant/internal/config"
+	"github.com/Devil666face/goaccountant/internal/store/database"
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/session"

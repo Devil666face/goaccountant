@@ -1,7 +1,7 @@
 package models
 
 import (
-	"github.com/Devil666face/goaccountant/pkg/web/validators"
+	"github.com/Devil666face/goaccountant/internal/web/validators"
 	"github.com/gofiber/fiber/v2"
 	"gorm.io/gorm"
 )

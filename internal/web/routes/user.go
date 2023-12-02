@@ -1,8 +1,8 @@
 package routes
 
 import (
-	"github.com/Devil666face/goaccountant/pkg/web/handlers"
-	"github.com/Devil666face/goaccountant/pkg/web/middlewares"
+	"github.com/Devil666face/goaccountant/internal/web/handlers"
+	"github.com/Devil666face/goaccountant/internal/web/middlewares"
 )
 
 func (r *Router) setUser() {

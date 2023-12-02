@@ -1,7 +1,7 @@
 package middlewares
 
 import (
-	"github.com/Devil666face/goaccountant/pkg/web"
+	"github.com/Devil666face/goaccountant/internal/web/handlers"
 
 	"github.com/gofiber/fiber/v2/middleware/compress"
 	"github.com/gofiber/fiber/v2/middleware/encryptcookie"
@@ -11,15 +11,15 @@ import (
 	"github.com/gofiber/fiber/v2/middleware/recover"
 )
 
-func Logger(unit *web.Unit) error {
-	return logger.New()(unit.Ctx())
+func Logger(h *handlers.Handler) error {
+	return logger.New()(h.Ctx())
 }
 
-func Recover(unit *web.Unit) error {
-	return recover.New()(unit.Ctx())
+func Recover(h *handlers.Handler) error {
+	return recover.New()(h.Ctx())
 }
 
-func SecureHeaders(unit *web.Unit) error {
+func SecureHeaders(h *handlers.Handler) error {
 	// XSSProtection:             "0",
 	// ContentTypeNosniff:        "nosniff",
 	// XFrameOptions:             "SAMEORIGIN",
@@ -34,22 +34,22 @@ func SecureHeaders(unit *web.Unit) error {
 	return helmet.New(helmet.Config{
 		XSSProtection:  "1",
 		ReferrerPolicy: "same-origin",
-	})(unit.Ctx())
+	})(h.Ctx())
 }
 
-func Compress(unit *web.Unit) error {
-	return compress.New()(unit.Ctx())
+func Compress(h *handlers.Handler) error {
+	return compress.New()(h.Ctx())
 }
 
-func EncryptCookie(unit *web.Unit) error {
+func EncryptCookie(h *handlers.Handler) error {
 	return encryptcookie.New(encryptcookie.Config{
-		Key: unit.Config().CookieKey,
-	})(unit.Ctx())
+		Key: h.Config().CookieKey,
+	})(h.Ctx())
 }
 
-func Limiter(unit *web.Unit) error {
+func Limiter(h *handlers.Handler) error {
 	return limiter.New(limiter.Config{
-		Storage: unit.Storage(),
-		Max:     unit.Config().MaxQueryPerMinute,
-	})(unit.Ctx())
+		Storage: h.Storage(),
+		Max:     h.Config().MaxQueryPerMinute,
+	})(h.Ctx())
 }

@@ -1,4 +1,4 @@
-package web
+package handlers
 
 const (
 	AuthKey      = "authenticated"

@@ -1,12 +1,12 @@
 package routes
 
 import (
-	"github.com/Devil666face/goaccountant/pkg/config"
-	"github.com/Devil666face/goaccountant/pkg/store/database"
-	"github.com/Devil666face/goaccountant/pkg/store/session"
-	"github.com/Devil666face/goaccountant/pkg/web"
-	"github.com/Devil666face/goaccountant/pkg/web/middlewares"
-	"github.com/Devil666face/goaccountant/pkg/web/validators"
+	"github.com/Devil666face/goaccountant/internal/config"
+	"github.com/Devil666face/goaccountant/internal/store/database"
+	"github.com/Devil666face/goaccountant/internal/store/session"
+	"github.com/Devil666face/goaccountant/internal/web/handlers"
+	"github.com/Devil666face/goaccountant/internal/web/middlewares"
+	"github.com/Devil666face/goaccountant/internal/web/validators"
 
 	"github.com/gofiber/fiber/v2"
 )
@@ -22,7 +22,7 @@ type Router struct {
 	database    *database.Database
 	session     *session.Store
 	validator   *validators.Validator
-	middlewares []func(*web.Unit) error
+	middlewares []func(*handlers.Handler) error
 }
 
 func New(
@@ -38,7 +38,7 @@ func New(
 		database:  _database,
 		session:   _session,
 		validator: _validator,
-		middlewares: []func(*web.Unit) error{
+		middlewares: []func(*handlers.Handler) error{
 			middlewares.Logger,
 			middlewares.Recover,
 			middlewares.Compress,
@@ -57,9 +57,9 @@ func New(
 	return &r
 }
 
-func (r *Router) wrapper(handler func(*web.Unit) error) func(c *fiber.Ctx) error {
+func (r *Router) wrapper(handler func(*handlers.Handler) error) func(c *fiber.Ctx) error {
 	return func(c *fiber.Ctx) error {
-		return handler(web.NewUnit(c, r.database, r.config, r.session, r.validator))
+		return handler(handlers.New(c, r.database, r.config, r.session, r.validator))
 	}
 }
 

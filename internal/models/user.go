@@ -3,8 +3,9 @@ package models
 import (
 	"errors"
 
+	"github.com/Devil666face/goaccountant/internal/web/validators"
 	"github.com/Devil666face/goaccountant/pkg/utils"
-	"github.com/Devil666face/goaccountant/pkg/web/validators"
+
 	"github.com/gofiber/fiber/v2"
 	"gorm.io/gorm"
 )

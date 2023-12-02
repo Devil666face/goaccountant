@@ -1,12 +1,12 @@
 package middlewares
 
 import (
-	"github.com/Devil666face/goaccountant/pkg/web"
+	"github.com/Devil666face/goaccountant/internal/web/handlers"
 
 	"github.com/gofiber/fiber/v2/middleware/csrf"
 )
 
-func Csrf(unit *web.Unit) error {
+func Csrf(h *handlers.Handler) error {
 	// KeyLookup:         "header:" + "X-Csrf-Token",
 	// CookieName:        "csrf_",
 	// CookieSameSite:    "Lax",
@@ -17,10 +17,10 @@ func Csrf(unit *web.Unit) error {
 	// SessionKey:        "fiber.csrf.token",
 	// HandlerContextKey: "fiber.csrf.handler",
 	return csrf.New(csrf.Config{
-		Storage: unit.Storage(),
+		Storage: h.Storage(),
 		// KeyLookup:  "form:csrf",
-		ContextKey:     web.Csrf,
+		ContextKey:     handlers.Csrf,
 		CookieHTTPOnly: true,
 		SingleUseToken: true,
-	})(unit.Ctx())
+	})(h.Ctx())
 }

@@ -5,9 +5,9 @@ import (
 	"log/slog"
 	"os"
 
-	"github.com/Devil666face/goaccountant/pkg/config"
+	"github.com/Devil666face/goaccountant/internal/config"
+	"github.com/Devil666face/goaccountant/internal/models"
 	"github.com/Devil666face/goaccountant/pkg/utils"
-	"github.com/Devil666face/goaccountant/pkg/web/models"
 
 	"gorm.io/gorm"
 )

@@ -5,13 +5,13 @@ import (
 	"log/slog"
 	"os"
 
-	"github.com/Devil666face/goaccountant/pkg/config"
-	"github.com/Devil666face/goaccountant/pkg/store/database"
-	"github.com/Devil666face/goaccountant/pkg/store/session"
-	"github.com/Devil666face/goaccountant/pkg/web/handlers"
-	"github.com/Devil666face/goaccountant/pkg/web/models"
-	"github.com/Devil666face/goaccountant/pkg/web/routes"
-	"github.com/Devil666face/goaccountant/pkg/web/validators"
+	"github.com/Devil666face/goaccountant/internal/config"
+	"github.com/Devil666face/goaccountant/internal/models"
+	"github.com/Devil666face/goaccountant/internal/store/database"
+	"github.com/Devil666face/goaccountant/internal/store/session"
+	"github.com/Devil666face/goaccountant/internal/web/handlers"
+	"github.com/Devil666face/goaccountant/internal/web/routes"
+	"github.com/Devil666face/goaccountant/internal/web/validators"
 
 	"github.com/gofiber/fiber/v2"
 )
